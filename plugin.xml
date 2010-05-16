@@ -2,4 +2,74 @@
 <?eclipse version="3.4"?>
 <plugin>
 
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="db4o"
+            id="squared">
+      </category>
+      <view
+            allowMultiple="false"
+            category="squared"
+            class="squared.views.ObjectView"
+            icon="icons/soda_icon32.png"
+            id="squared.views.ObjectView"
+            name="Object View"
+            restorable="true">
+      </view>
+      <view
+            category="squared"
+            class="squared.views.QueryView"
+            icon="icons/soda_icon64.png"
+            id="squared.views.QueryView"
+            name="SODA Query View">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="squared"
+            name="db4o">
+      </category>
+      <wizard
+            canFinishEarly="true"
+            category="squared"
+            class="squared.wizards.SodaQueryWizard"
+            icon="icons/soda_icon.png"
+            id="squared.wizards.SodaQueryWizard"
+            name="Soda Query File">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+         <editor
+               class="squared.editor.QueryEditor"
+               contributorClass="org.eclipse.gef.ui.actions.ActionBarContributor"
+               default="false"
+               extensions="sqd"
+               icon="icons/soda_icon16.png"
+               id="squared.editor"
+               name="Soda Query Editor">
+      </editor>
+         <!--
+      <editor
+            class="org.eclipse.gef.ui.parts.GraphicalEditor"
+            contributorClass="org.eclipse.gef.ui.actions.ActionBarContributor"
+            default="false"
+            extensions="sqd"
+            id="squared.editor"
+            name="Soda Query Editor">
+      </editor>
+      -->
+   </extension>
+
 </plugin>
