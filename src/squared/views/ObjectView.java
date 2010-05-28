@@ -3,6 +3,7 @@ package squared.views;
 import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
@@ -12,6 +13,11 @@ import org.eclipse.ui.*;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
 import org.eclipse.core.runtime.IAdaptable;
+
+import com.db4o.ext.*;
+
+import squared.Texts;
+import squared.DBConnection;
 
 
 /**
@@ -41,7 +47,7 @@ public class ObjectView extends ViewPart {
 
 	private TreeViewer viewer;
 	private DrillDownAdapter drillDownAdapter;
-	private Action action1;
+	private Action actionOpenDB;
 	private Action action2;
 	private Action doubleClickAction;
 
@@ -220,13 +226,13 @@ public class ObjectView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
+		manager.add(actionOpenDB);
 		manager.add(new Separator());
 		manager.add(action2);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
+		manager.add(actionOpenDB);
 		manager.add(action2);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
@@ -235,21 +241,43 @@ public class ObjectView extends ViewPart {
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
+		manager.add(actionOpenDB);
 		manager.add(action2);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
 	}
 
 	private void makeActions() {
-		action1 = new Action() {
+		actionOpenDB = new Action() {
 			public void run() {
-				showMessage("Action 1 executed");
+                FileDialog fd = new FileDialog(viewer.getControl().getShell(), SWT.OPEN);
+                fd.setText(Texts.OBJ_VIEW_OPEN_DIALOG_TITLE);
+                String selected = fd.open();
+                
+                if (!selected.equals(""))
+                {
+                	try {
+                		DBConnection.getInstance().open(selected);
+                	
+                    } catch (DatabaseFileLockedException e) {
+                        MessageDialog.openError(viewer.getControl().getShell(), 
+                        		Texts.OBJ_VIEW_OPEN_DB_FAILED, 
+                        		e.getMessage() + "\n\n" + Texts.OBJ_VIEW_DB_LOCKED);
+                        
+                    } catch (Db4oException e) {
+                        MessageDialog.openError(viewer.getControl().getShell(),
+                        		Texts.OBJ_VIEW_OPEN_DB_FAILED, e.getMessage());
+            			
+            		} finally {
+            			DBConnection.getInstance().close();
+            		}
+                }
+                
 			}
 		};
-		action1.setText("Action 1");
-		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+		actionOpenDB.setText(Texts.OBJ_VIEW_OPEN_DB);
+		actionOpenDB.setToolTipText(Texts.OBJ_VIEW_OPEN_DB_TOOLTIP);
+		actionOpenDB.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		
 		action2 = new Action() {
