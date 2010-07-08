@@ -29,12 +29,13 @@ public class SquaredEditPartFactory implements EditPartFactory
 	{
 		EditPart part = null;
 		if (model instanceof Diagram) {
-			part = new DiagramPart();
+			part = new DiagramPart(model);
 		} else if (model instanceof Node) {
-			part = new NodePart();
+			part = new NodePart(model);
 		} else if (model instanceof Constraint) {
-			part = new ConstraintPart();
+			part = new ConstraintPart(model);
 		}
+			
 		part.setModel(model);
 		return part;
 	}

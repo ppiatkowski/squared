@@ -1,23 +1,48 @@
 package squared.views;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.part.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.SWT;
-import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.DrillDownAdapter;
+import org.eclipse.ui.part.ViewPart;
 
-import com.db4o.ext.*;
-
-import squared.Texts;
+import squared.Activator;
 import squared.DBConnection;
+import squared.Texts;
+import squared.utils.TreeNode;
+
+import com.db4o.ext.DatabaseFileLockedException;
+import com.db4o.ext.Db4oException;
+import com.db4o.reflect.ReflectClass;
 
 
 /**
@@ -39,6 +64,36 @@ import squared.DBConnection;
  */
 
 public class ObjectView extends ViewPart {
+	
+	/**
+	 * Action that changes icon when it's inactive
+	 * @author pablo
+	 *
+	 */
+	private class StateAction extends Action {
+		private ImageDescriptor enabledIcon;
+		private ImageDescriptor disabledIcon;
+		
+		public void setIconForState(boolean state, String iconPath)
+		{
+		    try {
+		    	URL url = new URL(Activator.getDefault().getBundle().getEntry("/"), iconPath);
+		    	if (state)
+		    		enabledIcon = ImageDescriptor.createFromURL(url);
+		    	else
+		    		disabledIcon = ImageDescriptor.createFromURL(url);
+		    } catch (MalformedURLException e) {
+		    	System.err.println("StateAction.setEnabledIcon() ERROR: malformed URL.");
+		    	e.printStackTrace();
+		    }
+		}
+		
+		public void setEnabled(boolean status)
+		{
+			super.setEnabled(status);
+		    setImageDescriptor(status ? enabledIcon : disabledIcon);
+		}
+	}
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -46,9 +101,10 @@ public class ObjectView extends ViewPart {
 	public static final String ID = "squared.views.ObjectView";
 
 	private TreeViewer viewer;
+	private ViewContentProvider objectViewContentProvider;
 	private DrillDownAdapter drillDownAdapter;
 	private Action actionOpenDB;
-	private Action action2;
+	private StateAction actionCloseDB;
 	private Action doubleClickAction;
 
 	/*
@@ -139,31 +195,39 @@ public class ObjectView extends ViewPart {
 				return ((TreeParent)parent).hasChildren();
 			return false;
 		}
-/*
- * We will set up a dummy model to initialize tree heararchy.
- * In a real code, you will connect to a real model and
- * expose its hierarchy.
- */
-		private void initialize() {
-			TreeObject to1 = new TreeObject("Leaf 1");
-			TreeObject to2 = new TreeObject("Leaf 2");
-			TreeObject to3 = new TreeObject("Leaf 3");
-			TreeParent p1 = new TreeParent("Parent 1");
-			p1.addChild(to1);
-			p1.addChild(to2);
-			p1.addChild(to3);
-			
-			TreeObject to4 = new TreeObject("Leaf 4");
-			TreeParent p2 = new TreeParent("Parent 2");
-			p2.addChild(to4);
-			
-			TreeParent root = new TreeParent("Root");
-			root.addChild(p1);
-			root.addChild(p2);
-			
-			invisibleRoot = new TreeParent("");
-			invisibleRoot.addChild(root);
+		
+		public void initialize() {
+			if (invisibleRoot == null) {
+				invisibleRoot = new TreeParent("");
+			}
+			if (DBConnection.getInstance().isOpened())
+			{
+				
+				for (TreeNode<ReflectClass> node : DBConnection.getInstance().getDBReflection().getRootElement().getChildren())
+				{
+					traverse(node, invisibleRoot);
+				}
+			}
+			else
+			{
+				invisibleRoot = null;
+				invisibleRoot = new TreeParent("");
+			}
 		}
+		
+		private void traverse(TreeNode<ReflectClass> node, TreeParent parentNode) {
+			System.out.println("OV traverse at node "+node.getData().getName()+"   (parent is "+parentNode.getName()+")");
+			TreeParent newNode = new TreeParent(node.getData().getName());
+			parentNode.addChild(newNode);
+			for (TreeNode<ReflectClass> child : node.getChildren()) {
+				traverse(child, newNode);
+			}
+		}
+		
+		public TreeParent getRoot() {
+			return invisibleRoot;
+		}
+		
 	}
 	class ViewLabelProvider extends LabelProvider {
 
@@ -173,7 +237,9 @@ public class ObjectView extends ViewPart {
 		public Image getImage(Object obj) {
 			String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
 			if (obj instanceof TreeParent)
-			   imageKey = ISharedImages.IMG_OBJ_FOLDER;
+			   imageKey = ISharedImages.IMG_OBJ_ELEMENT;
+			else if (obj instanceof TreeObject)
+				imageKey = ISharedImages.IMG_OBJ_ELEMENT;
 			return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
 		}
 	}
@@ -193,7 +259,8 @@ public class ObjectView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(new ViewContentProvider());
+		objectViewContentProvider = new ViewContentProvider();
+		viewer.setContentProvider(objectViewContentProvider);
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(new NameSorter());
 		viewer.setInput(getViewSite());
@@ -228,12 +295,12 @@ public class ObjectView extends ViewPart {
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(actionOpenDB);
 		manager.add(new Separator());
-		manager.add(action2);
+		manager.add(actionCloseDB);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(actionOpenDB);
-		manager.add(action2);
+		manager.add(actionCloseDB);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
@@ -242,7 +309,7 @@ public class ObjectView extends ViewPart {
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(actionOpenDB);
-		manager.add(action2);
+		manager.add(actionCloseDB);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
 	}
@@ -258,7 +325,11 @@ public class ObjectView extends ViewPart {
                 {
                 	try {
                 		DBConnection.getInstance().open(selected);
-                	
+                		actionCloseDB.setEnabled(true);
+                		
+                		// refresh Object View
+                		objectViewContentProvider.initialize();
+                		viewer.refresh();
                     } catch (DatabaseFileLockedException e) {
                         MessageDialog.openError(viewer.getControl().getShell(), 
                         		Texts.OBJ_VIEW_OPEN_DB_FAILED, 
@@ -269,7 +340,7 @@ public class ObjectView extends ViewPart {
                         		Texts.OBJ_VIEW_OPEN_DB_FAILED, e.getMessage());
             			
             		} finally {
-            			DBConnection.getInstance().close();
+            			
             		}
                 }
                 
@@ -277,18 +348,41 @@ public class ObjectView extends ViewPart {
 		};
 		actionOpenDB.setText(Texts.OBJ_VIEW_OPEN_DB);
 		actionOpenDB.setToolTipText(Texts.OBJ_VIEW_OPEN_DB_TOOLTIP);
-		actionOpenDB.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		
-		action2 = new Action() {
+	    try {
+	    	URL url = new URL(Activator.getDefault().getBundle().getEntry("/"), "icons/open_db.png");
+	    	actionOpenDB.setImageDescriptor(ImageDescriptor.createFromURL(url));
+	    } catch (MalformedURLException e) {
+	    	System.err.println("ObjectView.makeActions() ERROR: malformed URL.");
+	    	e.printStackTrace();
+	    }
+		
+		
+		actionCloseDB = new StateAction() {
 			public void run() {
-				showMessage("Action 2 executed");
+				DBConnection.getInstance().close();
+				actionCloseDB.setEnabled(false);
+				
+        		// refresh Object View
+        		objectViewContentProvider.initialize();
+        		viewer.refresh();
 			}
 		};
-		action2.setText("Action 2");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+		actionCloseDB.setIconForState(true, "icons/close.png");
+		actionCloseDB.setIconForState(false, "icons/close_inactive.png");
+		actionCloseDB.setText(Texts.OBJ_VIEW_CLOSE_DB);
+		actionCloseDB.setToolTipText(Texts.OBJ_VIEW_CLOSE_DB_TOOLTIP);
+		actionCloseDB.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		actionCloseDB.setEnabled(false);
+	    try {
+	    	URL url = new URL(Activator.getDefault().getBundle().getEntry("/"), "icons/close_inactive.png");
+	    	actionCloseDB.setImageDescriptor(ImageDescriptor.createFromURL(url));
+	    } catch (MalformedURLException e) {
+	    	System.err.println("ObjectView.makeActions() ERROR: malformed URL.");
+	    	e.printStackTrace();
+	    }
+		
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();

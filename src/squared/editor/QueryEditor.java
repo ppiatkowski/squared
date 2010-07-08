@@ -6,13 +6,8 @@
 */
 package squared.editor;
 
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.GraphicalViewer;
@@ -28,14 +23,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 
 import squared.model.Diagram;
-
-//import squared.action.SchemaContextMenuProvider;
-//import squared.directedit.StatusLineValidationMessageHandler;
-//import squared.dnd.DataEditDropTargetListener;
+import squared.model.Node;
 import squared.part.factory.SquaredEditPartFactory;
 
 public class QueryEditor extends GraphicalEditorWithFlyoutPalette
@@ -50,7 +41,6 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 	
 	public QueryEditor()
 	{
-		System.out.println("QueryEditor constr");
 		editDomain = new DefaultEditDomain(this);
 		setEditDomain(editDomain);
 	}
@@ -59,7 +49,6 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		// TODO Auto-generated method stub
-		System.out.println("Editor.init(site, input)");
 		
 		// store site and input
 		setSite(site);
@@ -151,6 +140,10 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 		IEditorSite editorSite = getEditorSite();
 		GraphicalViewer viewer = new ScrollingGraphicalViewer();
 		viewer.createControl(parent);			
+		setGraphicalViewer(viewer);
+		configureGraphicalViewer();
+		hookGraphicalViewer();
+		initializeGraphicalViewer();
 		
 		// configure the viewer
 		viewer.getControl().setBackground(ColorConstants.white);
@@ -171,7 +164,8 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 		// acticate the viewer as selection provider for Eclipse
 		getSite().setSelectionProvider(viewer);
 
-		//viewer.setContents(getDiagram());
+		// this makes background unselectable (maybe root part takes whole space?)
+		viewer.setContents(getDiagram());
 
 //		ContextMenuProvider provider = new SchemaContextMenuProvider(viewer, getActionRegistry());
 //		viewer.setContextMenu(provider);
@@ -229,6 +223,11 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 	
 	public Diagram getDiagram()
 	{
+		if (diagram == null)
+		{
+			diagram = new Diagram();
+			diagram.addNode(new Node("test 1"));
+		}
 		return diagram;
 	}
 	

@@ -6,12 +6,17 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
+import squared.figures.NodeFigure;
+
 public class NodePart extends AbstractGraphicalEditPart {
+	
+	public NodePart(Object model) {
+		setModel(model);
+	}
 
 	@Override
 	protected IFigure createFigure() {
-		// TODO Auto-generated method stub
-		return null;
+		return new NodeFigure();
 	}
 
 	@Override

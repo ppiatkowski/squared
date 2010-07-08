@@ -7,60 +7,60 @@ import java.util.Vector;
  */
 public class Node {
 	
-	private String m_name = "Node name";
-	private String m_comment = "Node comment";
-	private Vector<Constraint> m_constraints = new Vector<Constraint>();
-	private Vector<Node> m_children = new Vector<Node>();
-	private Node m_parent = null;
+	private String name = "Node name";
+	private String comment = "Node comment";
+	private Vector<Constraint> constraints = new Vector<Constraint>();
+	private Vector<Node> children = new Vector<Node>();
+	private Node parent = null;
 		
-	Node(String name)
+	public Node(String name)
 	{
 		setName(name);
 	}
 	
-	Node(Node parent, String name)
+	public Node(Node parent, String name)
 	{
 		setParent(parent);
 		setName(name);
 	}
 	
-	void setName(String name)
+	public void setName(String name)
 	{
-		m_name = name;
+		this.name = name;
 	}
 	
-	String getName()
+	public String getName()
 	{
-		return m_name;
+		return name;
 	}
 	
-	void setParent(Node parent)
+	public void setParent(Node parent)
 	{
-		m_parent = parent;
+		this.parent = parent;
 	}
 	
-	Node getParent()
+	public Node getParent()
 	{
-		return m_parent;
+		return parent;
 	}
 	
-	Vector<Node> getChildren()
+	public Vector<Node> getChildren()
 	{
-		return m_children;
+		return children;
 	}
 	
-	Vector<Constraint> getConstraints()
+	public Vector<Constraint> getConstraints()
 	{
-		return m_constraints;
+		return constraints;
 	}
 	
-	void setComment(String comment)
+	public void setComment(String comment)
 	{
-		m_comment = comment;
+		this.comment = comment;
 	}
 	
-	String getComment()
+	public String getComment()
 	{
-		return m_comment;
+		return comment;
 	}
 }

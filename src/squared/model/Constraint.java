@@ -5,34 +5,34 @@ package squared.model;
  */
 public class Constraint {
 
-	private Node m_parent;
-	private String m_name;
+	private Node parent;
+	private String name;
 	
 	
-	Constraint(Node parent, String name)
+	public Constraint(Node parent, String name)
 	{
 		setParent(parent);
 		setName(name);
 	}
 	
-	void setName(String name)
+	public void setName(String name)
 	{
-		m_name = name;
+		this.name = name;
 	}
 	
-	String getName()
+	public String getName()
 	{
-		return m_name;
+		return name;
 	}
 	
-	Node getParent()
+	public Node getParent()
 	{
-		return m_parent;
+		return parent;
 	}
 	
-	void setParent(Node parent)
+	public void setParent(Node parent)
 	{
-		m_parent = parent;
+		this.parent = parent;
 	}
 
 }
