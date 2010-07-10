@@ -12,8 +12,6 @@ import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.ext.Db4oException;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.jdk.JdkClass;
-import com.db4o.reflect.jdk.JdkReflector;
 
 public class DBConnection {
 	private static DBConnection instance = null; 

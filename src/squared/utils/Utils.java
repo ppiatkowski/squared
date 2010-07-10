@@ -1,11 +1,15 @@
 package squared.utils;
 
-import java.util.*;
-import java.text.*;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
-import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.reflect.*;
+import com.db4o.ObjectContainer;
+import com.db4o.ext.StoredClass;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 public class Utils {
 	
