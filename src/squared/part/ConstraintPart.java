@@ -1,18 +1,15 @@
 package squared.part;
 
+import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Triangle;
 import org.eclipse.gef.ConnectionEditPart;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.NodeEditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-public class ConstraintPart extends AbstractGraphicalEditPart {
+public class ConstraintPart extends AbstractGraphicalEditPart implements NodeEditPart {
 	
-	public ConstraintPart(Object model) {
-		setModel(model);
-	}
-
 	@Override
 	protected IFigure createFigure() {
 		return new Triangle();
@@ -22,6 +19,30 @@ public class ConstraintPart extends AbstractGraphicalEditPart {
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

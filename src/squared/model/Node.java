@@ -1,6 +1,6 @@
 package squared.model;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * @model
@@ -9,20 +9,20 @@ public class Node {
 	
 	private String name = "Node name";
 	private String comment = "Node comment";
-	private Vector<Constraint> constraints = new Vector<Constraint>();
-	private Vector<Node> children = new Vector<Node>();
-	private Node parent = null;
+	
+	private NodeLink parentLink = null;
+	private ArrayList<NodeLink> childrenLinks = new ArrayList<NodeLink>();
+	private ArrayList<ConstraintLink> constraintLinks = new ArrayList<ConstraintLink>();
 		
 	public Node(String name)
 	{
 		setName(name);
 	}
 	
-	public Node(Node parent, String name)
-	{
-		setParent(parent);
-		setName(name);
-	}
+//	public Node(Node parent, String name)
+//	{
+//		setName(name);
+//	}
 	
 	public void setName(String name)
 	{
@@ -34,24 +34,34 @@ public class Node {
 		return name;
 	}
 	
-	public void setParent(Node parent)
+	public void setParentLink(NodeLink parent)
 	{
-		this.parent = parent;
+		this.parentLink = parent;
+	}
+	
+	public NodeLink getParentLink()
+	{
+		return parentLink;
 	}
 	
 	public Node getParent()
 	{
-		return parent;
+		return parentLink.getParentNode();
 	}
 	
-	public Vector<Node> getChildren()
+	public void addChildLink(NodeLink link)
 	{
-		return children;
+		childrenLinks.add(link);
 	}
 	
-	public Vector<Constraint> getConstraints()
+	public ArrayList<NodeLink> getChildrenLinks()
 	{
-		return constraints;
+		return childrenLinks;
+	}
+	
+	public ArrayList<ConstraintLink> getConstraintLinks()
+	{
+		return constraintLinks;
 	}
 	
 	public void setComment(String comment)

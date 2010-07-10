@@ -27,6 +27,7 @@ import org.eclipse.ui.PartInitException;
 
 import squared.model.Diagram;
 import squared.model.Node;
+import squared.model.NodeLink;
 import squared.part.factory.SquaredEditPartFactory;
 
 public class QueryEditor extends GraphicalEditorWithFlyoutPalette
@@ -172,7 +173,6 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 //		getSite().registerContextMenu("squared.editor.contextmenu", provider, viewer);
 
 		this.graphicalViewer = viewer;
-
 	}
 	
 	/**
@@ -226,7 +226,12 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 		if (diagram == null)
 		{
 			diagram = new Diagram();
-			diagram.addNode(new Node("test 1"));
+			Node parent = new Node("parent");
+			Node child = new Node("child");
+			NodeLink link = new NodeLink(parent, child, "test link");
+			
+			diagram.addNode(parent);
+			diagram.addNode(child);
 		}
 		return diagram;
 	}

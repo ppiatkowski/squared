@@ -14,10 +14,6 @@ import squared.model.Node;
 
 public class DiagramPart extends AbstractGraphicalEditPart { // FreeformGraphicalRootEditPart {
 	
-	public DiagramPart(Object model) {
-		this.setModel(model);
-	}
-
 	@Override
 	protected IFigure createFigure() {
 		Figure f = new DiagramFigure();
