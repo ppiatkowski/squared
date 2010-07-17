@@ -16,6 +16,8 @@ public class NodeLink {
 	{
 		parentNode = parent;
 		childNode = child;
+		parentNode.addChild(child);
+		childNode.setParent(parent);
 		parentNode.addChildLink(this);
 		childNode.setParentLink(this);
 	}

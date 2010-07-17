@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.EllipseAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.ConnectionEditPart;
@@ -29,16 +30,11 @@ public class NodePart extends AbstractGraphicalEditPart implements NodeEditPart 
 		
 	}
 
-//	@Override
-//	protected List getModelChildren() {
-//		Node n = (Node) getModel();
-//		return n.getChildrenLinks();
-//	}
 	
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
 	 */
-	protected List getModelSourceConnections()
+	protected List<NodeLink> getModelSourceConnections()
 	{
 		Node n = (Node) getModel();
 		return n.getChildrenLinks();
@@ -47,7 +43,7 @@ public class NodePart extends AbstractGraphicalEditPart implements NodeEditPart 
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections()
 	 */
-	protected List getModelTargetConnections()
+	protected List<NodeLink> getModelTargetConnections()
 	{
 		Node n = (Node) getModel();
 		List<NodeLink> list = new ArrayList<NodeLink>();
@@ -59,25 +55,21 @@ public class NodePart extends AbstractGraphicalEditPart implements NodeEditPart 
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
-		// TODO Auto-generated method stub
-		return null;
+		return new EllipseAnchor(getFigure());
 	}
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		// TODO Auto-generated method stub
-		return null;
+		return new EllipseAnchor(getFigure());
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
-		// TODO Auto-generated method stub
-		return null;
+		return new EllipseAnchor(getFigure());
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		// TODO Auto-generated method stub
-		return null;
+		return new EllipseAnchor(getFigure());
 	}
 }

@@ -5,14 +5,18 @@ import java.util.ArrayList;
 /**
  * @model
  */
-public class Node {
+public class Node extends DiagramElement {
 	
 	private String name = "Node name";
 	private String comment = "Node comment";
 	
 	private NodeLink parentLink = null;
+	private Node parent = null;
 	private ArrayList<NodeLink> childrenLinks = new ArrayList<NodeLink>();
+	private ArrayList<Node> children = new ArrayList<Node>();
+	
 	private ArrayList<ConstraintLink> constraintLinks = new ArrayList<ConstraintLink>();
+	
 		
 	public Node(String name)
 	{
@@ -34,6 +38,16 @@ public class Node {
 		return name;
 	}
 	
+	public void setParent(Node parent)
+	{
+		this.parent = parent;
+	}
+	
+	public Node getParent()
+	{
+		return parentLink.getParentNode();
+	}
+	
 	public void setParentLink(NodeLink parent)
 	{
 		this.parentLink = parent;
@@ -44,9 +58,14 @@ public class Node {
 		return parentLink;
 	}
 	
-	public Node getParent()
+	public void addChild(Node child)
 	{
-		return parentLink.getParentNode();
+		children.add(child);
+	}
+	
+	public ArrayList<Node> getChildren()
+	{
+		return children;
 	}
 	
 	public void addChildLink(NodeLink link)
@@ -57,6 +76,11 @@ public class Node {
 	public ArrayList<NodeLink> getChildrenLinks()
 	{
 		return childrenLinks;
+	}
+	
+	public void addConstraintLink(ConstraintLink link)
+	{
+		constraintLinks.add(link);
 	}
 	
 	public ArrayList<ConstraintLink> getConstraintLinks()

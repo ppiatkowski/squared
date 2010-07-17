@@ -14,9 +14,8 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
-import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
-import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
+import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.swt.SWT;
@@ -25,12 +24,14 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
+import squared.model.Constraint;
+import squared.model.ConstraintLink;
 import squared.model.Diagram;
 import squared.model.Node;
 import squared.model.NodeLink;
 import squared.part.factory.SquaredEditPartFactory;
 
-public class QueryEditor extends GraphicalEditorWithFlyoutPalette
+public class QueryEditor extends GraphicalEditor
 {
 	/** the <code>EditDomain</code>, will be initialized lazily */
 	private DefaultEditDomain editDomain;
@@ -109,13 +110,6 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 		
 	}
 
-	@Override
-	protected PaletteRoot getPaletteRoot() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
 	/*
 	* Returns the <code>EditDomain</code> used by this editor.
 	* @return the <code>EditDomain</code> used by this editor
@@ -229,9 +223,12 @@ public class QueryEditor extends GraphicalEditorWithFlyoutPalette
 			Node parent = new Node("parent");
 			Node child = new Node("child");
 			NodeLink link = new NodeLink(parent, child, "test link");
+			Constraint constr = new Constraint(child, "test constraint");
+			ConstraintLink constrLink = new ConstraintLink(child, constr);
 			
-			diagram.addNode(parent);
-			diagram.addNode(child);
+			diagram.addElement(parent);
+			diagram.addElement(child);
+			diagram.addElement(constr);
 		}
 		return diagram;
 	}

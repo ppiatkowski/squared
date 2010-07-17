@@ -8,6 +8,9 @@ public class ConstraintLink {
 	{
 		setNode(n);
 		setConstraint(c);
+		
+		node.addConstraintLink(this);
+		constraint.addLinkToNode(this);
 	}
 	
 	public Node getNode()

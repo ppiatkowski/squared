@@ -1,7 +1,6 @@
 package squared.figures;
 
 import org.eclipse.draw2d.FreeformLayer;
-import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 
@@ -10,9 +9,6 @@ public class DiagramFigure extends FreeformLayer implements MouseListener {
 	public DiagramFigure() {
 		setOpaque(true);
 		addMouseListener(this);
-		
-		FreeformLayout layout = new FreeformLayout();
-		setLayoutManager(layout);
 	}
 	
 	@Override
