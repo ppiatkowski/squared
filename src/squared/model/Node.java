@@ -15,12 +15,13 @@ public class Node extends DiagramElement {
 	private ArrayList<NodeLink> childrenLinks = new ArrayList<NodeLink>();
 	private ArrayList<Node> children = new ArrayList<Node>();
 	
-	private ArrayList<ConstraintLink> constraintLinks = new ArrayList<ConstraintLink>();
+	private ArrayList<Constraint> constraints;
 	
 		
 	public Node(String name)
 	{
 		setName(name);
+		constraints = new ArrayList<Constraint>();
 	}
 	
 //	public Node(Node parent, String name)
@@ -78,14 +79,14 @@ public class Node extends DiagramElement {
 		return childrenLinks;
 	}
 	
-	public void addConstraintLink(ConstraintLink link)
+	public void addConstraint(Constraint con)
 	{
-		constraintLinks.add(link);
+		constraints.add(con);
 	}
 	
-	public ArrayList<ConstraintLink> getConstraintLinks()
+	public ArrayList<Constraint> getConstraints()
 	{
-		return constraintLinks;
+		return constraints;
 	}
 	
 	public void setComment(String comment)

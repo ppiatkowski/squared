@@ -9,12 +9,17 @@ import java.util.List;
 public class Diagram {
 
 	private List<DiagramElement> diagramElements = new ArrayList<DiagramElement>();
+	private DiagramElement root = null;
 
 	public Diagram() {
 
 	}
 
 	public void addElement(DiagramElement n) {
+		if (diagramElements.isEmpty()) {
+			root = n;
+		}
+		
 		diagramElements.add(n);
 	}
 
@@ -22,4 +27,12 @@ public class Diagram {
 		return diagramElements;
 	}
 	
+	public DiagramElement getRootElement() {
+		return root;
+	}
+	
+	public void clear() {
+		root = null;
+		diagramElements.clear();
+	}
 }

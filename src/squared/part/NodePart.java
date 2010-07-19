@@ -1,6 +1,7 @@
 package squared.part;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
@@ -13,6 +14,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import squared.figures.NodeFigure;
+import squared.model.Constraint;
 import squared.model.Node;
 import squared.model.NodeLink;
 
@@ -28,6 +30,10 @@ public class NodePart extends AbstractGraphicalEditPart implements NodeEditPart 
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	protected List<Constraint> getModelChildren() {
+		return ((Node)getModel()).getConstraints();
 	}
 
 	

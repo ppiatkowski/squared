@@ -7,7 +7,6 @@ public class Constraint extends DiagramElement {
 
 	private Node parent;
 	private String name;
-	private ConstraintLink link;
 	
 	
 	public Constraint(Node parent, String name)
@@ -36,14 +35,4 @@ public class Constraint extends DiagramElement {
 		this.parent = parent;
 	}
 	
-	public void addLinkToNode(ConstraintLink link)
-	{
-		this.link = link;
-	}
-	
-	public ConstraintLink getLinkToNode()
-	{
-		return this.link;
-	}
-
 }

@@ -1,18 +1,23 @@
 package squared.figures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
+import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.ToolbarLayout;
 
-public class NodeFigure extends Ellipse implements MouseMotionListener, MouseListener { //Clickable {
+public class NodeFigure extends RoundedRectangle implements MouseMotionListener, MouseListener { //Clickable {
 	
 	private Label nameLabel;
+	private ConstraintFigure constraintFigure;
 	
 	public NodeFigure(Label name)
 	{
@@ -20,7 +25,7 @@ public class NodeFigure extends Ellipse implements MouseMotionListener, MouseLis
 		addMouseMotionListener(this);
 		
 		nameLabel = name;
-		setSize(100, 100);
+		setSize(100, 50);
 		setFill(true);
 		setOutline(true);
 		//setEnabled(false);
@@ -34,7 +39,8 @@ public class NodeFigure extends Ellipse implements MouseMotionListener, MouseLis
 		name.setForegroundColor(ColorConstants.black);
 		add(name);
 		
-
+		constraintFigure = new ConstraintFigure(new Label(""));
+		add(constraintFigure);
 	}
 
 	public void setSelected(boolean isSelected)
