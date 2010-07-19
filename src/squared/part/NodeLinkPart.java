@@ -8,6 +8,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
+import org.eclipse.swt.SWT;
 
 import squared.policy.NodeLinkPolicy;
 
@@ -46,6 +47,7 @@ public class NodeLinkPart extends AbstractConnectionEditPart {
 		PolylineConnection conn = (PolylineConnection) super.createFigure();
 		conn.setConnectionRouter(new BendpointConnectionRouter());
 		conn.setTargetDecoration(new PolygonDecoration());
+		conn.setAntialias(SWT.ON);
 		return conn;
 	}
 
