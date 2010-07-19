@@ -24,8 +24,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
-import squared.model.Constraint;
-import squared.model.ConstraintLink;
 import squared.model.Diagram;
 import squared.model.Node;
 import squared.model.NodeLink;
@@ -221,14 +219,21 @@ public class QueryEditor extends GraphicalEditor
 		{
 			diagram = new Diagram();
 			Node parent = new Node("parent");
-			Node child = new Node("child");
+			Node child = new Node("child 1");
+			Node child2 = new Node("child 2");
+			Node child3 = new Node("child 3");
 			NodeLink link = new NodeLink(parent, child, "test link");
-			Constraint constr = new Constraint(child, "test constraint");
-			ConstraintLink constrLink = new ConstraintLink(child, constr);
+			NodeLink link2 = new NodeLink(parent, child2, "test link");
+			NodeLink link3 = new NodeLink(parent, child3, "bla");
+			
+			Node grandChild = new Node("grand child");
+			NodeLink link4 = new NodeLink(child, grandChild);
 			
 			diagram.addElement(parent);
 			diagram.addElement(child);
-			diagram.addElement(constr);
+			diagram.addElement(child2);
+			diagram.addElement(child3);
+			diagram.addElement(grandChild);
 		}
 		return diagram;
 	}
