@@ -227,13 +227,17 @@ public class QueryEditor extends GraphicalEditor
 			NodeLink link3 = new NodeLink(parent, child3, "bla");
 			
 			Node grandChild = new Node("grand child");
-			NodeLink link4 = new NodeLink(child, grandChild);
+			Node gChild2 = new Node("g child 2");
+			NodeLink link4 = new NodeLink(child3, grandChild);
+			NodeLink link5 = new NodeLink(child3, gChild2);
+			
 			
 			diagram.addElement(parent);
 			diagram.addElement(child);
 			diagram.addElement(child2);
 			diagram.addElement(child3);
 			diagram.addElement(grandChild);
+			diagram.addElement(gChild2);
 		}
 		return diagram;
 	}

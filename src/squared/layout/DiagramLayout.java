@@ -50,38 +50,37 @@ public class DiagramLayout extends FreeformLayout {
 		bounds.y = TOP_MARGIN;
 		root.setBounds(bounds);
 		
-		for (int i = 1; i < children.size(); i++)
-		{
-			
-		}
-		
 		traverse((AbstractGraphicalEditPart)diagramRootPart, 
-				bounds.y + bounds.height + VERTICAL_GAP, 
-				canvasSize);
+				0d, (double)canvasSize.width,
+				bounds.y + bounds.height + VERTICAL_GAP);
 	}
 	
-	private void traverse(AbstractGraphicalEditPart element, int ceiling, Dimension canvasSize)
+	private void traverse(AbstractGraphicalEditPart element, double xStart, double xEnd, int ceiling)
 	{
 		Node node = (Node)element.getModel();
 		List<Node> children = node.getChildren();
-		
 		int childCount = children.size();
-		int margin = canvasSize.width / (childCount  + 1);
+		double offset = (double)(xEnd - xStart) / (double)(childCount*2);
 		
-		for (int i = 0; i < children.size(); i++) {
-			Node child = (Node)children.get(i);
+		for (int i = 1; i < childCount * 2; i++)
+		{
+			if (i % 2 == 0) continue;
+			
+			double x1 = xStart + offset * (i-1);
+			double x2 = xStart + offset * (i+1);
+			
+			Node child = (Node)children.get(i/2);
 			NodePart childPart = ((SquaredEditPartFactory)element.getViewer().getEditPartFactory()).getPartByModel(child);
 			IFigure childFigure = childPart.getFigure();
 			
 			Rectangle bounds = (Rectangle)getConstraint(childFigure);
 			Dimension preferredSize = childFigure.getPreferredSize();
-			bounds.x = margin * (i+1) - (preferredSize.width >> 1);
+			bounds.x = (int)(xStart + offset * i - (preferredSize.width >> 1));
 			bounds.y = ceiling;
 			childFigure.setBounds(bounds);
 			
-			traverse(childPart, ceiling + bounds.height + VERTICAL_GAP, canvasSize);
+			traverse(childPart, x1, x2, bounds.y + bounds.height + VERTICAL_GAP);
 		}
-
 	}
 	
 	@Override
