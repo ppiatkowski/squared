@@ -50,37 +50,24 @@ public class DBConnection {
 			
 				for (ReflectClass cls : storedClasses)
 				{
-					System.out.println("===========================TRAVERSE=======================");
-					System.out.println("class: "+cls.getName());
 					traverse(cls, dbReflection.getRootElement());
 				}
 			}
-			
-			System.out.println("\n\n\n\n\n\n\n\n");
-			//System.out.println("TREE: "+dbReflection.getRootElement().toString());
 		} catch(Exception e){
-			System.out.println("EKSEPSZON: ");
 			e.printStackTrace();
 		}
 	}
 	
 	private void traverse(ReflectClass cls, TreeNode<ReflectClass> parentNode) {
-		System.out.print("--------------------\ntraverse: "+cls.getName()+"  ");
-		
 		TreeNode node = new TreeNode<ReflectClass>(cls);
 		parentNode.addChild(node);
 		
 		if (cls.isPrimitive() || Utils.isIgnored(cls.getName()))
 		{
-			System.out.println("Primitive or Ignored");
 		}
 		else
 		{
 			ReflectField[] fields = cls.getDeclaredFields();
-			System.out.println("\nfields:");
-			for (ReflectField field : fields) {
-				System.out.println("field: "+field.getName());
-			}
 			for (ReflectField field : fields) {
 				traverse(field.getFieldType(), node);
 			}
