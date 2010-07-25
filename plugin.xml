@@ -46,7 +46,7 @@
             class="squared.wizards.SodaQueryWizard"
             icon="icons/soda_icon.png"
             id="squared.wizards.SodaQueryWizard"
-            name="Soda Query File">
+            name="SODA Query File">
       </wizard>
    </extension>
    <extension
@@ -58,7 +58,7 @@
                extensions="sqd"
                icon="icons/soda_icon16.png"
                id="squared.editor"
-               name="Soda Query Editor">
+               name="SODA Query Editor">
       </editor>
          <!--
       <editor
