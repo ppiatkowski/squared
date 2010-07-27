@@ -31,7 +31,7 @@ public class SquaredEditPartFactory implements EditPartFactory
 			part = new NodePart();
 			nodeMap.put((Node)model, (NodePart) part);
 		} else if (model instanceof NodeLink) {
-			part = new NodeLinkPart();
+			part = new NodeLinkPart(((NodeLink)model).getLabel());
 		} else if (model instanceof Constraint) {
 			part = new ConstraintPart();
 		}

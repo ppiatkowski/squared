@@ -1,10 +1,13 @@
 package squared.part;
 
 import org.eclipse.draw2d.BendpointConnectionRouter;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.MidpointLocator;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
@@ -13,7 +16,16 @@ import org.eclipse.swt.SWT;
 import squared.policy.NodeLinkPolicy;
 
 public class NodeLinkPart extends AbstractConnectionEditPart {
+	protected Label label;
 
+	public NodeLinkPart(String label) {
+		super();
+		this.label = new Label(label);
+		this.label.setOpaque(true);
+		this.label.setBackgroundColor(ColorConstants.buttonLightest);
+		this.label.setBorder(new LineBorder());
+	}
+	
 	/**
 	 * @see org.eclipse.gef.EditPart#activate()
 	 */
@@ -48,19 +60,8 @@ public class NodeLinkPart extends AbstractConnectionEditPart {
 		conn.setConnectionRouter(new BendpointConnectionRouter());
 		conn.setTargetDecoration(new PolygonDecoration());
 		conn.setAntialias(SWT.ON);
+		conn.add(label, new MidpointLocator(conn, 0));
 		return conn;
-	}
-
-	/**
-	 * Sets the width of the line when selected
-	 */
-	public void setSelected(int value)
-	{
-		super.setSelected(value);
-		if (value != EditPart.SELECTED_NONE)
-			((PolylineConnection) getFigure()).setLineWidth(2);
-		else
-			((PolylineConnection) getFigure()).setLineWidth(1);
 	}
 
 }

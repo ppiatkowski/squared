@@ -340,7 +340,7 @@ public class QueryEditor extends GraphicalEditor
 			if (field != null) {
 				Node child = new Node(field.getFieldType(), childName);
 				node.addChild(child);
-				new NodeLink(node, child);
+				new NodeLink(node, child, childName);
 				getDiagram().addElement(child);
 				graphicalViewer.setContents(getDiagram());
 			}
