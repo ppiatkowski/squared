@@ -35,4 +35,8 @@ public class Diagram {
 		root = null;
 		diagramElements.clear();
 	}
+	
+	public boolean isEmpty() {
+		return diagramElements.isEmpty();
+	}
 }

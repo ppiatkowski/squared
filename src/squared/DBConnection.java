@@ -69,6 +69,7 @@ public class DBConnection {
 		{
 			ReflectField[] fields = cls.getDeclaredFields();
 			for (ReflectField field : fields) {
+				System.out.println("save field name as well: "+field.getName());
 				traverse(field.getFieldType(), node);
 			}
 			

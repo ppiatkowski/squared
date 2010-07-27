@@ -6,6 +6,8 @@
 */
 package squared.editor;
 
+import java.util.List;
+
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,6 +26,9 @@ import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -35,6 +40,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -43,9 +50,14 @@ import squared.Texts;
 import squared.model.Diagram;
 import squared.model.Node;
 import squared.model.NodeLink;
+import squared.part.NodePart;
 import squared.part.factory.SquaredEditPartFactory;
 
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
+
 public class QueryEditor extends GraphicalEditor
+							implements ISelectionListener
 {
 	/** the <code>EditDomain</code>, will be initialized lazily */
 	private DefaultEditDomain editDomain;
@@ -55,10 +67,26 @@ public class QueryEditor extends GraphicalEditor
 	
 	private Diagram diagram;
 	
+	private static QueryEditor instance = null;
+	
 	public QueryEditor()
 	{
+		instance = this;
 		editDomain = new DefaultEditDomain(this);
 		setEditDomain(editDomain);
+	}
+		
+	public static QueryEditor getInstance()
+	{
+		return instance;
+	}
+	
+	/**
+	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
+	 */
+	public void dispose() {
+		instance = null;
+		super.dispose();
 	}
 	
 	@Override
@@ -261,30 +289,64 @@ public class QueryEditor extends GraphicalEditor
 		if (diagram == null)
 		{
 			diagram = new Diagram();
-			Node parent = new Node("parent");
-			Node child = new Node("child 1");
-			Node child2 = new Node("child 2");
-			Node child3 = new Node("child 3");
-			NodeLink link = new NodeLink(parent, child, "test link");
-			NodeLink link2 = new NodeLink(parent, child2, "test link");
-			NodeLink link3 = new NodeLink(parent, child3, "bla");
-			
-			Node grandChild = new Node("grand child");
-			Node gChild2 = new Node("g child 2");
-			NodeLink link4 = new NodeLink(child3, grandChild);
-			NodeLink link5 = new NodeLink(child3, gChild2);
-			
-			
-			diagram.addElement(parent);
-			diagram.addElement(child);
-			diagram.addElement(child2);
-			diagram.addElement(child3);
-			diagram.addElement(grandChild);
-			diagram.addElement(gChild2);
 		}
 		return diagram;
 	}
 	
+    /**
+     * @see ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
+     */
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) 
+	{
+//		Object first = ((IStructuredSelection) selection).getFirstElement();
+		if (selection instanceof IStructuredSelection) {
+			List selected = ((IStructuredSelection) selection).toList();
+			for (Object elem : selected) {
+				if (elem instanceof NodePart) {
+					System.out.println("selected  node "+elem.toString() + "["+part.getTitle()+"]  "+part.getSite().getId());
+				}
+			}
+		}
+	}
+	
+	public void setDiagramRoot(ReflectClass root)
+	{
+		Node child = new Node(root, "");
+		if (!getDiagram().isEmpty())
+		{
+			MessageDialog dialog = new MessageDialog(graphicalViewer.getControl().getShell(), 
+					Texts.QUERY_EDITOR_CREATE_NEW, null,
+					Texts.QUERY_EDITOR_CLEAR_DIAGRAM, MessageDialog.CONFIRM,
+					new String[] { Texts.QUERY_EDITOR_CREATE_NEW, Texts.TXT_CANCEL }, 0);
+			int ret = dialog.open();
+			if (ret == 1)
+				return;
+			
+			getDiagram().clear();
+		}
+		
+		getDiagram().addElement(child);
+		graphicalViewer.setContents(getDiagram());
+		System.out.println("TODO layout");
+		
+//		graphicalViewer.getControl().pack();
+		graphicalViewer.getContents().refresh();
+	}
+	
+	public void spawnChildNode(Node node, String childName) {
+		if (!node.alreadySpawned(childName)) {
+			
+			ReflectField field = node.getData().getDeclaredField(childName);
+			if (field != null) {
+				Node child = new Node(field.getFieldType(), childName);
+				node.addChild(child);
+				new NodeLink(node, child);
+				getDiagram().addElement(child);
+				graphicalViewer.setContents(getDiagram());
+			}
+		} 
+	}
+ 
 }
 
 

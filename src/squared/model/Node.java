@@ -2,41 +2,43 @@ package squared.model;
 
 import java.util.ArrayList;
 
+import com.db4o.reflect.ReflectClass;
+
 /**
  * @model
  */
 public class Node extends DiagramElement {
 	
-	private String name = "Node name";
-	private String comment = "Node comment";
+	protected ReflectClass clazz;
+	protected String descent;
 	
-	private NodeLink parentLink = null;
-	private Node parent = null;
-	private ArrayList<NodeLink> childrenLinks = new ArrayList<NodeLink>();
-	private ArrayList<Node> children = new ArrayList<Node>();
-	
-	private ArrayList<Constraint> constraints;
-	
+	protected NodeLink parentLink = null;
+	protected Node parent = null;
+	protected ArrayList<NodeLink> childrenLinks = new ArrayList<NodeLink>();
+	protected ArrayList<Node> children = new ArrayList<Node>();
+	protected ArrayList<Constraint> constraints;
 		
-	public Node(String name)
+	public Node(ReflectClass clazz, String descent)
 	{
-		setName(name);
+		this.clazz = clazz;
+		this.descent = descent;
+		
 		constraints = new ArrayList<Constraint>();
 	}
 	
-//	public Node(Node parent, String name)
-//	{
-//		setName(name);
-//	}
-	
-	public void setName(String name)
+	public ReflectClass getData()
 	{
-		this.name = name;
+		return clazz;
+	}
+	
+	public String getDescent() 
+	{
+		return descent;
 	}
 	
 	public String getName()
 	{
-		return name;
+		return clazz.getName();
 	}
 	
 	public void setParent(Node parent)
@@ -62,6 +64,7 @@ public class Node extends DiagramElement {
 	public void addChild(Node child)
 	{
 		children.add(child);
+		child.setParent(this);
 	}
 	
 	public ArrayList<Node> getChildren()
@@ -89,13 +92,12 @@ public class Node extends DiagramElement {
 		return constraints;
 	}
 	
-	public void setComment(String comment)
-	{
-		this.comment = comment;
+	public boolean alreadySpawned(String fieldName) {
+		for (Node child : children) {
+			if (child.getDescent().equals(fieldName))
+				return true;
+		}
+		return false;
 	}
 	
-	public String getComment()
-	{
-		return comment;
-	}
 }

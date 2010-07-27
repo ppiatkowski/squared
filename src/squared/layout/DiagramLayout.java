@@ -87,9 +87,7 @@ public class DiagramLayout extends FreeformLayout {
 	public Object getConstraint(IFigure child)
 	{
 		if (child instanceof NodeFigure)
-			return new Rectangle(0, 0, 75, 50);
-		else if (child instanceof ConstraintFigure)
-			return new Rectangle(150, 0, 200, 50);
+			return ((NodeFigure)child).getConstraint();
 		else
 			return super.getConstraint(child);
 	}

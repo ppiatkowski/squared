@@ -38,6 +38,7 @@ import org.eclipse.ui.part.ViewPart;
 import squared.Activator;
 import squared.DBConnection;
 import squared.Texts;
+import squared.editor.QueryEditor;
 import squared.utils.TreeNode;
 
 import com.db4o.ext.DatabaseFileLockedException;
@@ -117,20 +118,25 @@ public class ObjectView extends ViewPart {
 	 * (like Task List, for example).
 	 */
 	 
-	class TreeObject implements IAdaptable {
+	class TreeObject<T> implements IAdaptable {
 		private String name;
-		private TreeParent parent;
+		private T dataReference;
+		private TreeParent<T> parent;
 		
-		public TreeObject(String name) {
+		public TreeObject(String name, T data) {
 			this.name = name;
+			this.dataReference = data;
 		}
 		public String getName() {
 			return name;
 		}
-		public void setParent(TreeParent parent) {
+		public T getDataReference() {
+			return dataReference;
+		}
+		public void setParent(TreeParent<T> parent) {
 			this.parent = parent;
 		}
-		public TreeParent getParent() {
+		public TreeParent<T> getParent() {
 			return parent;
 		}
 		public String toString() {
@@ -141,21 +147,21 @@ public class ObjectView extends ViewPart {
 		}
 	}
 	
-	class TreeParent extends TreeObject {
+	class TreeParent<T> extends TreeObject<T> {
 		private ArrayList children;
-		public TreeParent(String name) {
-			super(name);
+		public TreeParent(String name, T data) {
+			super(name, data);
 			children = new ArrayList();
 		}
-		public void addChild(TreeObject child) {
+		public void addChild(TreeObject<T> child) {
 			children.add(child);
 			child.setParent(this);
 		}
-		public void removeChild(TreeObject child) {
+		public void removeChild(TreeObject<T> child) {
 			children.remove(child);
 			child.setParent(null);
 		}
-		public TreeObject [] getChildren() {
+		public TreeObject<T> [] getChildren() {
 			return (TreeObject [])children.toArray(new TreeObject[children.size()]);
 		}
 		public boolean hasChildren() {
@@ -165,7 +171,7 @@ public class ObjectView extends ViewPart {
 
 	class ViewContentProvider implements IStructuredContentProvider, 
 										   ITreeContentProvider {
-		private TreeParent invisibleRoot;
+		private TreeParent<ReflectClass> invisibleRoot;
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
@@ -198,11 +204,10 @@ public class ObjectView extends ViewPart {
 		
 		public void initialize() {
 			if (invisibleRoot == null) {
-				invisibleRoot = new TreeParent("");
+				invisibleRoot = new TreeParent("", null);
 			}
 			if (DBConnection.getInstance().isOpened())
 			{
-				
 				for (TreeNode<ReflectClass> node : DBConnection.getInstance().getDBReflection().getRootElement().getChildren())
 				{
 					traverse(node, invisibleRoot);
@@ -211,20 +216,19 @@ public class ObjectView extends ViewPart {
 			else
 			{
 				invisibleRoot = null;
-				invisibleRoot = new TreeParent("");
+				invisibleRoot = new TreeParent("", null);
 			}
 		}
 		
-		private void traverse(TreeNode<ReflectClass> node, TreeParent parentNode) {
-			System.out.println("OV traverse at node "+node.getData().getName()+"   (parent is "+parentNode.getName()+")");
-			TreeParent newNode = new TreeParent(node.getData().getName());
+		private void traverse(TreeNode<ReflectClass> node, TreeParent<ReflectClass> parentNode) {
+			TreeParent<ReflectClass> newNode = new TreeParent<ReflectClass>(node.getData().getName(), node.getData());
 			parentNode.addChild(newNode);
 			for (TreeNode<ReflectClass> child : node.getChildren()) {
 				traverse(child, newNode);
 			}
 		}
 		
-		public TreeParent getRoot() {
+		public TreeParent<ReflectClass> getRoot() {
 			return invisibleRoot;
 		}
 		
@@ -264,6 +268,7 @@ public class ObjectView extends ViewPart {
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(new NameSorter());
 		viewer.setInput(getViewSite());
+		getSite().setSelectionProvider(viewer);
 
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "squared.viewer");
@@ -386,8 +391,10 @@ public class ObjectView extends ViewPart {
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				showMessage("Double-click detected on "+obj.toString());
+				TreeParent<ReflectClass> obj = (TreeParent<ReflectClass>)((IStructuredSelection)selection).getFirstElement();
+				if ((obj.getChildren().length != 0) && (QueryEditor.getInstance() != null)) {
+					QueryEditor.getInstance().setDiagramRoot(obj.getDataReference());
+				}
 			}
 		};
 	}
