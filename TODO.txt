@@ -1,3 +1,5 @@
-w Object View wyswietlaj nazwy pol i nazwy klas np: name (java.lang.String)
+- w NodeFigure dodaj ikony przy attrybutach i prymitywach
 
-dispose of loaded images from outside shared library
+- w Object View wyswietlaj nazwy pol i nazwy klas np: name (java.lang.String)
+
+- dispose of loaded images from outside shared library
