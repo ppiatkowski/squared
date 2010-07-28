@@ -167,10 +167,7 @@ public class NodeFigure extends RoundedRectangle {
 
 		ReflectField[] fields = node.getData().getDeclaredFields();
 		for (ReflectField field : fields) {
-			if (Utils.isIgnored(field.getName()))
-				continue;
-			
-			if (field.getFieldType().isPrimitive())
+			if (field.getFieldType().isPrimitive() || Utils.isIgnored(field.getFieldType().getName()))
 				primitivesFigure.add(new MouseAwareLabel(field.getName()));
 			else
 				attributesFigure.add(new MouseAwareLabel(field.getName()));
