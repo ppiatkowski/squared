@@ -10,7 +10,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-import squared.figures.ConstraintFigure;
 import squared.figures.DiagramFigure;
 import squared.figures.NodeFigure;
 import squared.model.Diagram;

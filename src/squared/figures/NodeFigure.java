@@ -165,7 +165,7 @@ public class NodeFigure extends RoundedRectangle {
 //		Label attribute1 = new Label("field 1", new Image(d, 
 //				UMLClassFigure.class.getResourceAsStream("field_private_obj.gif")));
 
-		ReflectField[] fields = node.getData().getDeclaredFields();
+		ReflectField[] fields = node.getData().getType().getDeclaredFields();
 		for (ReflectField field : fields) {
 			if (field.getFieldType().isPrimitive() || Utils.isIgnored(field.getFieldType().getName()))
 				primitivesFigure.add(new MouseAwareLabel(field.getName()));

@@ -17,7 +17,7 @@ public class DBConnection {
 	private static DBConnection instance = null; 
 	private static ObjectContainer db;
 	private static String containerPath;
-	private static Tree<ReflectClass> dbReflection;
+	private static Tree<ClassReflection> dbReflection;
 	
 	private DBConnection() {
 	}
@@ -38,19 +38,18 @@ public class DBConnection {
 		containerPath = path;
 		System.out.println("[squared] OPEN object container: "+containerPath);
 		db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), path);
-		dbReflection = new Tree<ReflectClass>();
+		dbReflection = new Tree<ClassReflection>();
 		
 		try{
-		
 			List<ReflectClass> storedClasses = Utils.getStoredClasses(db);
 			
 			// placeholder root
 			if (!storedClasses.isEmpty()) {
-				dbReflection.setRootElement(new TreeNode<ReflectClass>(storedClasses.get(0)));
+				dbReflection.setRootElement(new TreeNode<ClassReflection>( new ClassReflection(storedClasses.get(0), "")) );
 			
 				for (ReflectClass cls : storedClasses)
 				{
-					traverse(cls, dbReflection.getRootElement());
+					traverse(new ClassReflection(cls, ""), dbReflection.getRootElement());
 				}
 			}
 		} catch(Exception e){
@@ -58,19 +57,18 @@ public class DBConnection {
 		}
 	}
 	
-	private void traverse(ReflectClass cls, TreeNode<ReflectClass> parentNode) {
-		TreeNode node = new TreeNode<ReflectClass>(cls);
+	private void traverse(ClassReflection cls, TreeNode<ClassReflection> parentNode) {
+		TreeNode node = new TreeNode<ClassReflection>(cls);
 		parentNode.addChild(node);
 		
-		if (cls.isPrimitive() || Utils.isIgnored(cls.getName()))
+		if (cls.getType().isPrimitive() || Utils.isIgnored(cls.getType().getName()))
 		{
 		}
 		else
 		{
-			ReflectField[] fields = cls.getDeclaredFields();
+			ReflectField[] fields = cls.getType().getDeclaredFields();
 			for (ReflectField field : fields) {
-				System.out.println("save field name as well: "+field.getName());
-				traverse(field.getFieldType(), node);
+				traverse(new ClassReflection(field.getFieldType(), field.getName()), node);
 			}
 			
 		}
@@ -85,7 +83,7 @@ public class DBConnection {
 		containerPath = null;
 	}
 	
-	public Tree<ReflectClass> getDBReflection()
+	public Tree<ClassReflection> getDBReflection()
 	{
 		return dbReflection;
 	}

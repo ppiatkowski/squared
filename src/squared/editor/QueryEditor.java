@@ -46,6 +46,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import squared.ClassReflection;
 import squared.Texts;
 import squared.model.Diagram;
 import squared.model.Node;
@@ -53,7 +54,6 @@ import squared.model.NodeLink;
 import squared.part.NodePart;
 import squared.part.factory.SquaredEditPartFactory;
 
-import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 
 public class QueryEditor extends GraphicalEditor
@@ -309,9 +309,9 @@ public class QueryEditor extends GraphicalEditor
 		}
 	}
 	
-	public void setDiagramRoot(ReflectClass root)
+	public void setDiagramRoot(ClassReflection root)
 	{
-		Node child = new Node(root, "");
+		Node child = new Node(root);
 		if (!getDiagram().isEmpty())
 		{
 			MessageDialog dialog = new MessageDialog(graphicalViewer.getControl().getShell(), 
@@ -336,9 +336,9 @@ public class QueryEditor extends GraphicalEditor
 	public void spawnChildNode(Node node, String childName) {
 		if (!node.alreadySpawned(childName)) {
 			
-			ReflectField field = node.getData().getDeclaredField(childName);
+			ReflectField field = node.getData().getType().getDeclaredField(childName);
 			if (field != null) {
-				Node child = new Node(field.getFieldType(), childName);
+				Node child = new Node(new ClassReflection(field.getFieldType(), childName));
 				node.addChild(child);
 				new NodeLink(node, child, childName);
 				getDiagram().addElement(child);

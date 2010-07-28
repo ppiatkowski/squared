@@ -2,15 +2,14 @@ package squared.model;
 
 import java.util.ArrayList;
 
-import com.db4o.reflect.ReflectClass;
+import squared.ClassReflection;
 
 /**
  * @model
  */
 public class Node extends DiagramElement {
 	
-	protected ReflectClass clazz;
-	protected String descent;
+	protected ClassReflection clazz;
 	
 	protected NodeLink parentLink = null;
 	protected Node parent = null;
@@ -18,27 +17,26 @@ public class Node extends DiagramElement {
 	protected ArrayList<Node> children = new ArrayList<Node>();
 	protected ArrayList<Constraint> constraints;
 		
-	public Node(ReflectClass clazz, String descent)
+	public Node(ClassReflection clazz)
 	{
 		this.clazz = clazz;
-		this.descent = descent;
 		
 		constraints = new ArrayList<Constraint>();
 	}
 	
-	public ReflectClass getData()
+	public ClassReflection getData()
 	{
 		return clazz;
 	}
 	
 	public String getDescent() 
 	{
-		return descent;
+		return clazz.getDescent();
 	}
 	
 	public String getName()
 	{
-		return clazz.getName();
+		return clazz.getType().getName();
 	}
 	
 	public void setParent(Node parent)

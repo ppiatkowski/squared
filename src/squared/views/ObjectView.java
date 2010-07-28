@@ -36,6 +36,7 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 import squared.Activator;
+import squared.ClassReflection;
 import squared.DBConnection;
 import squared.Texts;
 import squared.editor.QueryEditor;
@@ -43,7 +44,6 @@ import squared.utils.TreeNode;
 
 import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.ext.Db4oException;
-import com.db4o.reflect.ReflectClass;
 
 
 /**
@@ -171,7 +171,7 @@ public class ObjectView extends ViewPart {
 
 	class ViewContentProvider implements IStructuredContentProvider, 
 										   ITreeContentProvider {
-		private TreeParent<ReflectClass> invisibleRoot;
+		private TreeParent<ClassReflection> invisibleRoot;
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
@@ -208,7 +208,7 @@ public class ObjectView extends ViewPart {
 			}
 			if (DBConnection.getInstance().isOpened())
 			{
-				for (TreeNode<ReflectClass> node : DBConnection.getInstance().getDBReflection().getRootElement().getChildren())
+				for (TreeNode<ClassReflection> node : DBConnection.getInstance().getDBReflection().getRootElement().getChildren())
 				{
 					traverse(node, invisibleRoot);
 				}
@@ -220,15 +220,15 @@ public class ObjectView extends ViewPart {
 			}
 		}
 		
-		private void traverse(TreeNode<ReflectClass> node, TreeParent<ReflectClass> parentNode) {
-			TreeParent<ReflectClass> newNode = new TreeParent<ReflectClass>(node.getData().getName(), node.getData());
+		private void traverse(TreeNode<ClassReflection> node, TreeParent<ClassReflection> parentNode) {
+			TreeParent<ClassReflection> newNode = new TreeParent<ClassReflection>(node.getData().getType().getName(), node.getData());
 			parentNode.addChild(newNode);
-			for (TreeNode<ReflectClass> child : node.getChildren()) {
+			for (TreeNode<ClassReflection> child : node.getChildren()) {
 				traverse(child, newNode);
 			}
 		}
 		
-		public TreeParent<ReflectClass> getRoot() {
+		public TreeParent<ClassReflection> getRoot() {
 			return invisibleRoot;
 		}
 		
@@ -236,7 +236,11 @@ public class ObjectView extends ViewPart {
 	class ViewLabelProvider extends LabelProvider {
 
 		public String getText(Object obj) {
-			return obj.toString();
+			String name = "";
+			if (obj instanceof TreeParent) {
+				name = ((ClassReflection)((TreeParent)obj).getDataReference()).getDescent();
+			}
+			return name + " ("+ obj.toString() + ")";
 		}
 		public Image getImage(Object obj) {
 			String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
@@ -391,7 +395,7 @@ public class ObjectView extends ViewPart {
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
-				TreeParent<ReflectClass> obj = (TreeParent<ReflectClass>)((IStructuredSelection)selection).getFirstElement();
+				TreeParent<ClassReflection> obj = (TreeParent<ClassReflection>)((IStructuredSelection)selection).getFirstElement();
 				if ((obj.getChildren().length != 0) && (QueryEditor.getInstance() != null)) {
 					QueryEditor.getInstance().setDiagramRoot(obj.getDataReference());
 				}
