@@ -26,6 +26,7 @@ import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -346,6 +347,22 @@ public class QueryEditor extends GraphicalEditor
 			}
 		} 
 	}
+	
+	public void constrainField(Node node, String childName) {
+			
+		ReflectField field = node.getData().getType().getDeclaredField(childName);
+		if (field != null) {
+			
+			InputDialog dialog = new InputDialog(graphicalViewer.getControl().getShell(), 
+					"Constrain field", "Enter constraint", childName, null);//IInputValidator validator);
+			if (dialog.open() == 0) {
+				System.out.println("INPUT: "+dialog.getValue());
+			}
+
+			graphicalViewer.setContents(getDiagram());
+		}
+	}
+	
  
 }
 

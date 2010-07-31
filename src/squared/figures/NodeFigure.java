@@ -124,7 +124,11 @@ class CompartmentFigure extends Figure {
 			}
 			break;
 		case PRIMITIVE:
-			System.out.println("constrain primitive "+label.getText());
+			if (getParent() != null) {
+				QueryEditor.getInstance().constrainField(
+						((NodeFigure)getParent()).node,
+						label.getText());
+			}
 			break;
 		default:
 			break;
