@@ -1,4 +1,4 @@
-package squared;
+package squared.core;
 
 import com.db4o.reflect.ReflectClass;
 

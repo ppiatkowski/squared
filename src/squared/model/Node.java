@@ -1,8 +1,11 @@
 package squared.model;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
-import squared.ClassReflection;
+import squared.core.ClassReflection;
+
+import com.db4o.query.Constraint;
 
 /**
  * @model
@@ -15,13 +18,11 @@ public class Node extends DiagramElement {
 	protected Node parent = null;
 	protected ArrayList<NodeLink> childrenLinks = new ArrayList<NodeLink>();
 	protected ArrayList<Node> children = new ArrayList<Node>();
-	protected ArrayList<Constraint> constraints;
+	protected Hashtable<String, String> constraints = new Hashtable<String, String>();
 		
 	public Node(ClassReflection clazz)
 	{
 		this.clazz = clazz;
-		
-		constraints = new ArrayList<Constraint>();
 	}
 	
 	public ClassReflection getData()
@@ -80,12 +81,38 @@ public class Node extends DiagramElement {
 		return childrenLinks;
 	}
 	
-	public void addConstraint(Constraint con)
+	/**
+	 * 
+	 * @param fieldName
+	 * @param constraint
+	 * @param overwrite if true, constrainField will overwrite any existing constraints on this field. If false, will do nothing and return false.
+	 * @return false if method called in non-overwriting mode AND the field is already constrained. True otherwise.
+	 */
+	public boolean constrainField(String fieldName, String constraint, boolean overwrite)
 	{
-		constraints.add(con);
+		if (isFieldConstrained(fieldName) && !overwrite) {
+			return false;
+		}
+		
+		if (constraints.containsKey(fieldName)) {
+			constraints.remove(fieldName);
+		}
+		constraints.put(fieldName, constraint);
+			
+		return true;
 	}
 	
-	public ArrayList<Constraint> getConstraints()
+	public boolean isFieldConstrained(String fieldName)
+	{
+		return constraints.containsKey(fieldName) && !constraints.get(fieldName).equalsIgnoreCase("");
+	}
+	
+	public String getConstraint(String fieldName)
+	{
+		return constraints.get(fieldName);
+	}
+	
+	public Hashtable<String, String> getConstraints()
 	{
 		return constraints;
 	}

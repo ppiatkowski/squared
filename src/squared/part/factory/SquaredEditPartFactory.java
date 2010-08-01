@@ -5,11 +5,9 @@ import java.util.HashMap;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 
-import squared.model.Constraint;
 import squared.model.Diagram;
 import squared.model.Node;
 import squared.model.NodeLink;
-import squared.part.ConstraintPart;
 import squared.part.DiagramPart;
 import squared.part.NodeLinkPart;
 import squared.part.NodePart;
@@ -32,8 +30,6 @@ public class SquaredEditPartFactory implements EditPartFactory
 			nodeMap.put((Node)model, (NodePart) part);
 		} else if (model instanceof NodeLink) {
 			part = new NodeLinkPart(((NodeLink)model).getLabel());
-		} else if (model instanceof Constraint) {
-			part = new ConstraintPart();
 		}
 			
 		part.setModel(model);

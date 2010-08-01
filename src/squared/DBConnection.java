@@ -2,6 +2,7 @@ package squared;
 
 import java.util.List;
 
+import squared.core.ClassReflection;
 import squared.utils.Tree;
 import squared.utils.TreeNode;
 import squared.utils.Utils;

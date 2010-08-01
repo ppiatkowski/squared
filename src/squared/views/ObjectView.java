@@ -36,9 +36,9 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 import squared.Activator;
-import squared.ClassReflection;
 import squared.DBConnection;
 import squared.Texts;
+import squared.core.ClassReflection;
 import squared.editor.QueryEditor;
 import squared.utils.TreeNode;
 

@@ -47,8 +47,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import squared.ClassReflection;
 import squared.Texts;
+import squared.core.ClassReflection;
 import squared.model.Diagram;
 import squared.model.Node;
 import squared.model.NodeLink;
@@ -357,7 +357,7 @@ public class QueryEditor extends GraphicalEditor
 					Texts.QUERY_EDITOR_CONSTRAIN_FIELD + "'" + childName + "'", 
 					Texts.QUERY_EDITOR_ENTER_CONSTRAINT, childName, null);//IInputValidator validator);
 			if (dialog.open() == 0) {
-				System.out.println("INPUT: "+dialog.getValue());
+				node.constrainField(childName, dialog.getValue(), true);
 			}
 
 			graphicalViewer.setContents(getDiagram());

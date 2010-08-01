@@ -17,6 +17,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
@@ -79,7 +80,6 @@ class MouseAwareLabel extends Label implements MouseMotionListener, MouseListene
 
 	@Override
 	public void mouseReleased(MouseEvent me) {
-		System.out.println("mouse released");
 	}
 	
 }
@@ -171,10 +171,19 @@ public class NodeFigure extends RoundedRectangle {
 
 		ReflectField[] fields = node.getData().getType().getDeclaredFields();
 		for (ReflectField field : fields) {
-			if (field.getFieldType().isPrimitive() || Utils.isIgnored(field.getFieldType().getName()))
-				primitivesFigure.add(new MouseAwareLabel(field.getName()));
-			else
+			if (field.getFieldType().isPrimitive() || Utils.isIgnored(field.getFieldType().getName())) {
+				String label = field.getName();
+				MouseAwareLabel primitiveLabel = new MouseAwareLabel(label);
+				if (node.isFieldConstrained(field.getName())) {
+					label += " [" + node.getConstraint(field.getName()) + "]";
+					primitiveLabel.setText(label);
+					primitiveLabel.setForegroundColor(new Color(null, 255, 255, 255));
+				}
+				
+				primitivesFigure.add(primitiveLabel);
+			} else {
 				attributesFigure.add(new MouseAwareLabel(field.getName()));
+			}
 		}
 		
 	    add(attributesFigure);

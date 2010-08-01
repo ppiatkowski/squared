@@ -13,7 +13,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import squared.figures.NodeFigure;
-import squared.model.Constraint;
 import squared.model.Node;
 import squared.model.NodeLink;
 
@@ -29,11 +28,6 @@ public class NodePart extends AbstractGraphicalEditPart implements NodeEditPart 
 		// TODO Auto-generated method stub
 		
 	}
-	
-	protected List<Constraint> getModelChildren() {
-		return ((Node)getModel()).getConstraints();
-	}
-
 	
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
