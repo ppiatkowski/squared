@@ -18,5 +18,7 @@ public class Texts {
 	public static final String QUERY_EDITOR_CLEAR_DIAGRAM = "You will lose current diagram.";
 	public static final String QUERY_EDITOR_CREATE_NEW = "Create new diagram.";
 	public static final String QUERY_EDITOR_SAVE_AS_IMG = "Save diagram as image";
+	public static final String QUERY_EDITOR_CONSTRAIN_FIELD = "Constrain field ";
+	public static final String QUERY_EDITOR_ENTER_CONSTRAINT = "Enter constraint";
 		
 }
