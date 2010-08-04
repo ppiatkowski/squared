@@ -54,6 +54,7 @@ import squared.model.Node;
 import squared.model.NodeLink;
 import squared.part.NodePart;
 import squared.part.factory.SquaredEditPartFactory;
+import squared.views.QueryView;
 
 import com.db4o.reflect.ReflectField;
 
@@ -231,7 +232,7 @@ public class QueryEditor extends GraphicalEditor
 		getSite().setSelectionProvider(viewer);
 
 		// this makes background unselectable (maybe root part takes whole space?)
-		viewer.setContents(getDiagram());
+		viewer.setContents(Diagram.getInstance());
 
 //		ContextMenuProvider provider = new SchemaContextMenuProvider(viewer, getActionRegistry());
 //		viewer.setContextMenu(provider);
@@ -285,15 +286,6 @@ public class QueryEditor extends GraphicalEditor
 //		}
 //	}
 	
-	public Diagram getDiagram()
-	{
-		if (diagram == null)
-		{
-			diagram = new Diagram();
-		}
-		return diagram;
-	}
-	
     /**
      * @see ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
      */
@@ -313,7 +305,7 @@ public class QueryEditor extends GraphicalEditor
 	public void setDiagramRoot(ClassReflection root)
 	{
 		Node child = new Node(root);
-		if (!getDiagram().isEmpty())
+		if (!Diagram.getInstance().isEmpty())
 		{
 			MessageDialog dialog = new MessageDialog(graphicalViewer.getControl().getShell(), 
 					Texts.QUERY_EDITOR_CREATE_NEW, null,
@@ -323,11 +315,11 @@ public class QueryEditor extends GraphicalEditor
 			if (ret == 1)
 				return;
 			
-			getDiagram().clear();
+			Diagram.getInstance().clear();
 		}
 		
-		getDiagram().addElement(child);
-		graphicalViewer.setContents(getDiagram());
+		Diagram.getInstance().addElement(child);
+		graphicalViewer.setContents(Diagram.getInstance());
 		System.out.println("TODO layout");
 		
 //		graphicalViewer.getControl().pack();
@@ -342,8 +334,8 @@ public class QueryEditor extends GraphicalEditor
 				Node child = new Node(new ClassReflection(field.getFieldType(), childName));
 				node.addChild(child);
 				new NodeLink(node, child, childName);
-				getDiagram().addElement(child);
-				graphicalViewer.setContents(getDiagram());
+				Diagram.getInstance().addElement(child);
+				graphicalViewer.setContents(Diagram.getInstance());
 			}
 		} 
 	}
@@ -360,7 +352,7 @@ public class QueryEditor extends GraphicalEditor
 				node.constrainField(childName, dialog.getValue(), true);
 			}
 
-			graphicalViewer.setContents(getDiagram());
+			graphicalViewer.setContents(Diagram.getInstance());
 		}
 	}
 	

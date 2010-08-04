@@ -5,8 +5,6 @@ import java.util.Hashtable;
 
 import squared.core.ClassReflection;
 
-import com.db4o.query.Constraint;
-
 /**
  * @model
  */
@@ -47,7 +45,7 @@ public class Node extends DiagramElement {
 	
 	public Node getParent()
 	{
-		return parentLink.getParentNode();
+		return parent;
 	}
 	
 	public void setParentLink(NodeLink parent)
@@ -98,6 +96,7 @@ public class Node extends DiagramElement {
 			constraints.remove(fieldName);
 		}
 		constraints.put(fieldName, constraint);
+		Diagram.getInstance().event(Diagram.ModelEvent.EVENT_FIELD_CONSTRAINED, this, fieldName);
 			
 		return true;
 	}

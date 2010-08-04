@@ -8,11 +8,10 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -21,6 +20,10 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+
+import squared.model.Diagram;
+import squared.model.IModelChangeListener;
+import squared.model.Node;
 
 
 /**
@@ -41,14 +44,14 @@ import org.eclipse.ui.part.ViewPart;
  * <p>
  */
 
-public class QueryView extends ViewPart {
+public class QueryView extends ViewPart implements IModelChangeListener {
 
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
 	public static final String ID = "squared.views.QueryView";
 
-	private TextQueryViewer viewer;
+	protected TextQueryViewer viewer;
 	private Action action1;
 	private Action action2;
 
@@ -62,34 +65,29 @@ public class QueryView extends ViewPart {
 	 * (like Task List, for example).
 	 */
 	 
-	class ViewContentProvider implements IStructuredContentProvider {
+	class ViewContentProvider implements IContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 		public void dispose() {
 		}
-		public Object[] getElements(Object parent) {
-			return new String[] { "One", "Two", "Three" };
-		}
 	}
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-		public String getColumnText(Object obj, int index) {
-			return getText(obj);
-		}
-		public Image getColumnImage(Object obj, int index) {
-			return getImage(obj);
-		}
+	class ViewLabelProvider extends LabelProvider implements IBaseLabelProvider {
 		public Image getImage(Object obj) {
 			return PlatformUI.getWorkbench().
 					getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		}
-	}
-	class NameSorter extends ViewerSorter {
 	}
 
 	/**
 	 * The constructor.
 	 */
 	public QueryView() {
+		Diagram.getInstance().addModelChangeListener(this);
+	}
+	
+	public void dispose() {
+		Diagram.getInstance().removeModelChangeListener(this);
+		super.dispose();
 	}
 
 	/**
@@ -180,5 +178,21 @@ public class QueryView extends ViewPart {
 	 */
 	public void setFocus() {
 		viewer.getControl().setFocus();
+	}
+
+	@Override
+	public void fieldConstrained(Node node, String fieldName) {
+		// TODO Auto-generated method stub
+		System.out.println("FIELD CONSTRAINED");
+	}
+
+	@Override
+	public void nodeAdded(Node parent, Node child) {
+		if (parent == null) {
+			System.out.println("NEW ROOT");
+		} else {
+			System.out.println("NODE EXPANDED");
+		}
+		
 	}
 }
