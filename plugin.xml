@@ -53,7 +53,6 @@
          point="org.eclipse.ui.editors">
          <editor
                class="squared.editor.QueryEditor"
-               contributorClass="org.eclipse.gef.ui.actions.ActionBarContributor"
                default="false"
                extensions="sqd"
                icon="icons/soda_icon16.png"
