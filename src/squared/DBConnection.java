@@ -58,8 +58,23 @@ public class DBConnection {
 		}
 	}
 	
+	protected boolean checkCycle(TreeNode<ClassReflection> parentNode, ReflectClass clazz) {
+		String className = clazz.getName();
+		boolean found = false;
+		while (parentNode != null) {
+			if (parentNode.getData().getType().getName().equals(className)) {
+				found = true;
+				System.out.println("FOUND GRAPH CYCLE at "+className);
+				break;
+			}
+			parentNode = parentNode.parent;
+		}
+		return found;
+	}
+	
 	private void traverse(ClassReflection cls, TreeNode<ClassReflection> parentNode) {
-		TreeNode node = new TreeNode<ClassReflection>(cls);
+		TreeNode<ClassReflection> node = new TreeNode<ClassReflection>(cls);
+		node.setParent(parentNode);
 		parentNode.addChild(node);
 		
 		if (cls.getType().isPrimitive() || Utils.isIgnored(cls.getType().getName()))
@@ -69,6 +84,9 @@ public class DBConnection {
 		{
 			ReflectField[] fields = cls.getType().getDeclaredFields();
 			for (ReflectField field : fields) {
+				if (checkCycle(parentNode, field.getFieldType())) {
+					continue;
+				}
 				traverse(new ClassReflection(field.getFieldType(), field.getName()), node);
 			}
 			

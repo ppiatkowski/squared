@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class TreeNode<T> {
  
+	public TreeNode<T> parent = null;
     public T data;
     public List<TreeNode<T>> children;
  
@@ -122,5 +123,9 @@ public class TreeNode<T> {
         }
         sb.append("]").append("}");
         return sb.toString();
+    }
+    
+    public void setParent(TreeNode<T> par) {
+    	parent = par;
     }
 }
