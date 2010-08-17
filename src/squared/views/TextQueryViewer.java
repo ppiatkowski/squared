@@ -41,5 +41,9 @@ public class TextQueryViewer extends ContentViewer {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void setText(String t) {
+		text.setText(t);
+	}
 
 }

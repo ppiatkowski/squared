@@ -21,6 +21,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import squared.core.QueryBuilder;
 import squared.model.Diagram;
 import squared.model.IModelChangeListener;
 import squared.model.Node;
@@ -183,6 +184,8 @@ public class QueryView extends ViewPart implements IModelChangeListener {
 	@Override
 	public void fieldConstrained(Node node, String fieldName) {
 		// TODO Auto-generated method stub
+		viewer.setText( QueryBuilder.getTextQuery( Diagram.getInstance() ) );
+		viewer.refresh();
 		System.out.println("FIELD CONSTRAINED");
 	}
 
@@ -193,6 +196,9 @@ public class QueryView extends ViewPart implements IModelChangeListener {
 		} else {
 			System.out.println("NODE EXPANDED");
 		}
+		
+		viewer.setText( QueryBuilder.getTextQuery( Diagram.getInstance() ) );
+		viewer.refresh();
 		
 	}
 }
