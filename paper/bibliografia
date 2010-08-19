@@ -3,3 +3,6 @@ classes squared.utils.Tree, Node from http://sujitpal.blogspot.com/2006/05/java-
 The definitive guide to db4o
  Autorzy Stefan Edlich, Jim Paterson, Henrik Hörning
  
+
+db4o reference documentation (dołączane do dystrybucji)
+

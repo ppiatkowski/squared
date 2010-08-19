@@ -1,3 +1,6 @@
  - jak traktować klasy wbudowane java.lang.String, java.util.Vector, etc.?
 
- - 
+ - cykle w grafie (rekurencyjne zaleznosci miedzy klasami) np. ]
+  class Pracownik {
+    Pracownik szef;
+  };
