@@ -1,11 +1,14 @@
 package squared.core;
 
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import java.util.Vector;
 
-import com.db4o.query.Constraint;
-import com.db4o.query.Query;
-
 import squared.model.Diagram;
+import squared.model.DiagramElement;
 import squared.model.Node;
 
 public class QueryBuilder {
@@ -33,8 +36,47 @@ public class QueryBuilder {
 		rootConstrain.append(".class);");
 		query.add(rootConstrain.toString());
 		
-		for (Node child : root.getChildren()) {
-			//traverse(child);
+		
+		// finds all diagram elements that have contraints (1)
+		// when constraint is found we travel tree from that node up to the diagram root (2)
+		// we record travel history on the stack while we go up the tree
+		// then we pop the stack (reversing the travel history) (3)
+		for (DiagramElement e : diagram.getElements()) {
+			if (e instanceof Node) {
+				Node node = (Node) e;
+				Hashtable<String, String> constraints = node.getConstraints();
+				// (1)
+				if (!constraints.isEmpty()) { 
+					
+					StringBuffer line = new StringBuffer();
+					Set set = constraints.entrySet();
+					Iterator constr = set.iterator();
+					while (constr.hasNext()) {
+						Stack<String> descendStack = new Stack<String>();
+						Map.Entry entry = (Map.Entry) constr.next();
+						descendStack.push(".descend('" + entry.getKey() + "').constrain("
+								+ entry.getValue() + ");");
+						
+						// (2)
+						Node currentNode = node;
+						while (currentNode.getParent() != null) {
+							
+							descendStack.push(".descend('"+currentNode.getDescent()+"')");
+							currentNode = currentNode.getParent();
+						}
+						descendStack.push("query");
+						
+						// (3)
+						while (!descendStack.empty()) {
+							line.append(descendStack.pop());
+						}
+						
+						query.add(line.toString());
+					}
+					
+
+				}
+			}
 		}
 		
 		/*
