@@ -10,6 +10,7 @@ import java.util.Vector;
 import squared.model.Diagram;
 import squared.model.DiagramElement;
 import squared.model.Node;
+import squared.utils.Utils;
 
 public class QueryBuilder {
 
@@ -47,26 +48,32 @@ public class QueryBuilder {
 				Hashtable<String, String> constraints = node.getConstraints();
 				// (1)
 				if (!constraints.isEmpty()) { 
-					
-					StringBuffer line = new StringBuffer();
 					Set set = constraints.entrySet();
 					Iterator constr = set.iterator();
 					while (constr.hasNext()) {
+						
 						Stack<String> descendStack = new Stack<String>();
 						Map.Entry entry = (Map.Entry) constr.next();
-						descendStack.push(".descend('" + entry.getKey() + "').constrain("
+						descendStack.push(".descend(\"" + entry.getKey() + "\").constrain("
 								+ entry.getValue() + ");");
+						
+						StringBuffer line = new StringBuffer();
+						line.append("Constraint constr").append(Utils.capitalize((String)entry.getKey()));
 						
 						// (2)
 						Node currentNode = node;
 						while (currentNode.getParent() != null) {
+							StringBuffer descent = new StringBuffer(currentNode.getDescent());
+							char capitalized = descent.charAt(0);
+							line.append(Utils.capitalize(descent.toString()));
 							
-							descendStack.push(".descend('"+currentNode.getDescent()+"')");
+							descendStack.push(".descend(\""+descent.toString()+"\")");
 							currentNode = currentNode.getParent();
 						}
 						descendStack.push("query");
 						
 						// (3)
+						line.append(" = ");
 						while (!descendStack.empty()) {
 							line.append(descendStack.pop());
 						}
