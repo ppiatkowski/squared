@@ -15,7 +15,6 @@ public class TextQueryViewer extends ContentViewer {
 	public TextQueryViewer(Composite parent) {
 		
 		text = new Text(parent, SWT.READ_ONLY | SWT.WRAP);
-		text.setText("Class.Employee.descend('name').constraint(new Integer(99)))Class.Employee.descend('name').constraint(new Integer(99)))Class.Employee.descend('name').constraint(new Integer(99)))Class.Employee.descend('name').constraint(new Integer(99)))");
 		super.hookControl(text);
 	}
 
