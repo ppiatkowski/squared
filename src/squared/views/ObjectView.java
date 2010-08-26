@@ -37,7 +37,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import squared.Activator;
 import squared.DBConnection;
-import squared.Texts;
+import squared.ITexts;
 import squared.core.ClassReflection;
 import squared.editor.QueryEditor;
 import squared.utils.TreeNode;
@@ -327,7 +327,7 @@ public class ObjectView extends ViewPart {
 		actionOpenDB = new Action() {
 			public void run() {
                 FileDialog fd = new FileDialog(viewer.getControl().getShell(), SWT.OPEN);
-                fd.setText(Texts.OBJ_VIEW_OPEN_DIALOG_TITLE);
+                fd.setText(ITexts.OBJ_VIEW_OPEN_DIALOG_TITLE);
                 String selected = fd.open();
                 
                 if (!selected.equals(""))
@@ -341,12 +341,12 @@ public class ObjectView extends ViewPart {
                 		viewer.refresh();
                     } catch (DatabaseFileLockedException e) {
                         MessageDialog.openError(viewer.getControl().getShell(), 
-                        		Texts.OBJ_VIEW_OPEN_DB_FAILED, 
-                        		e.getMessage() + "\n\n" + Texts.OBJ_VIEW_DB_LOCKED);
+                        		ITexts.OBJ_VIEW_OPEN_DB_FAILED, 
+                        		e.getMessage() + "\n\n" + ITexts.OBJ_VIEW_DB_LOCKED);
                         
                     } catch (Db4oException e) {
                         MessageDialog.openError(viewer.getControl().getShell(),
-                        		Texts.OBJ_VIEW_OPEN_DB_FAILED, e.getMessage());
+                        		ITexts.OBJ_VIEW_OPEN_DB_FAILED, e.getMessage());
             			
             		} finally {
             			
@@ -355,8 +355,8 @@ public class ObjectView extends ViewPart {
                 
 			}
 		};
-		actionOpenDB.setText(Texts.OBJ_VIEW_OPEN_DB);
-		actionOpenDB.setToolTipText(Texts.OBJ_VIEW_OPEN_DB_TOOLTIP);
+		actionOpenDB.setText(ITexts.OBJ_VIEW_OPEN_DB);
+		actionOpenDB.setToolTipText(ITexts.OBJ_VIEW_OPEN_DB_TOOLTIP);
 		
 	    try {
 	    	URL url = new URL(Activator.getDefault().getBundle().getEntry("/"), "icons/open_db.png");
@@ -379,8 +379,8 @@ public class ObjectView extends ViewPart {
 		};
 		actionCloseDB.setIconForState(true, "icons/close.png");
 		actionCloseDB.setIconForState(false, "icons/close_inactive.png");
-		actionCloseDB.setText(Texts.OBJ_VIEW_CLOSE_DB);
-		actionCloseDB.setToolTipText(Texts.OBJ_VIEW_CLOSE_DB_TOOLTIP);
+		actionCloseDB.setText(ITexts.OBJ_VIEW_CLOSE_DB);
+		actionCloseDB.setToolTipText(ITexts.OBJ_VIEW_CLOSE_DB_TOOLTIP);
 		actionCloseDB.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		actionCloseDB.setEnabled(false);

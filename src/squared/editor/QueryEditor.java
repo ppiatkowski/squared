@@ -47,14 +47,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import squared.Texts;
+import squared.ITexts;
 import squared.core.ClassReflection;
 import squared.model.Diagram;
 import squared.model.Node;
 import squared.model.NodeLink;
 import squared.part.NodePart;
 import squared.part.factory.SquaredEditPartFactory;
-import squared.views.QueryView;
 
 import com.db4o.reflect.ReflectField;
 
@@ -133,7 +132,7 @@ public class QueryEditor extends GraphicalEditor
 		}
 		
 		dialog.setOverwrite(true);
-		dialog.setText(Texts.QUERY_EDITOR_SAVE_AS_IMG);
+		dialog.setText(ITexts.QUERY_EDITOR_SAVE_AS_IMG);
 		String saveLocation = dialog.open();
 		
 		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)graphicalViewer.getRootEditPart();
@@ -308,9 +307,9 @@ public class QueryEditor extends GraphicalEditor
 		if (!Diagram.getInstance().isEmpty())
 		{
 			MessageDialog dialog = new MessageDialog(graphicalViewer.getControl().getShell(), 
-					Texts.QUERY_EDITOR_CREATE_NEW, null,
-					Texts.QUERY_EDITOR_CLEAR_DIAGRAM, MessageDialog.CONFIRM,
-					new String[] { Texts.QUERY_EDITOR_CREATE_NEW, Texts.TXT_CANCEL }, 0);
+					ITexts.QUERY_EDITOR_CREATE_NEW, null,
+					ITexts.QUERY_EDITOR_CLEAR_DIAGRAM, MessageDialog.CONFIRM,
+					new String[] { ITexts.QUERY_EDITOR_CREATE_NEW, ITexts.TXT_CANCEL }, 0);
 			int ret = dialog.open();
 			if (ret == 1)
 				return;
@@ -346,8 +345,8 @@ public class QueryEditor extends GraphicalEditor
 		if (field != null) {
 			
 			InputDialog dialog = new InputDialog(graphicalViewer.getControl().getShell(), 
-					Texts.QUERY_EDITOR_CONSTRAIN_FIELD + "'" + childName + "'", 
-					Texts.QUERY_EDITOR_ENTER_CONSTRAINT, childName, null);//IInputValidator validator);
+					ITexts.QUERY_EDITOR_CONSTRAIN_FIELD + "'" + childName + "'", 
+					ITexts.QUERY_EDITOR_ENTER_CONSTRAINT, childName, null);//IInputValidator validator);
 			if (dialog.open() == 0) {
 				node.constrainField(childName, dialog.getValue(), true);
 			}
