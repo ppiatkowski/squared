@@ -183,20 +183,12 @@ public class QueryView extends ViewPart implements IModelChangeListener {
 
 	@Override
 	public void fieldConstrained(Node node, String fieldName) {
-		// TODO Auto-generated method stub
 		viewer.setText( QueryBuilder.getTextQuery( Diagram.getInstance() ) );
 		viewer.refresh();
-		System.out.println("FIELD CONSTRAINED");
 	}
 
 	@Override
 	public void nodeAdded(Node parent, Node child) {
-		if (parent == null) {
-			System.out.println("NEW ROOT");
-		} else {
-			System.out.println("NODE EXPANDED");
-		}
-		
 		viewer.setText( QueryBuilder.getTextQuery( Diagram.getInstance() ) );
 		viewer.refresh();
 		
