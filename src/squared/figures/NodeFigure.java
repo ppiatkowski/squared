@@ -7,7 +7,6 @@ import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
@@ -40,6 +39,7 @@ class MouseAwareLabel extends Label implements MouseMotionListener, MouseListene
 	public MouseAwareLabel(String str) {
 		super(str);
 		setFont(normalFont);
+		setForegroundColor(new Color(null, 0, 0, 0));
 		
 		addMouseMotionListener(this);
 		addMouseListener(this);
@@ -97,7 +97,7 @@ class CompartmentFigure extends Figure {
 	
 		ToolbarLayout layout = new ToolbarLayout();
 		layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
-		layout.setStretchMinorAxis(false);
+		layout.setStretchMinorAxis(true);
 		layout.setSpacing(2);
 		setLayoutManager(layout);
 		setBorder(new CompartmentFigureBorder());
@@ -138,10 +138,10 @@ class CompartmentFigure extends Figure {
 }
 
 public class NodeFigure extends RoundedRectangle {
-	public static final int LEFT_MARGIN = 3;
-	public static final int RIGHT_MARGIN = 3;
-	public static final int TOP_MARGIN = 3;
-	public static final int BOTTOM_MARGIN = 3;
+	public static final int LEFT_MARGIN = 10;
+	public static final int RIGHT_MARGIN = 10;
+	public static final int TOP_MARGIN = 5;
+	public static final int BOTTOM_MARGIN = 10;
 	
 	protected Node node;
 	protected Label nameLabel;
@@ -152,17 +152,24 @@ public class NodeFigure extends RoundedRectangle {
 	public NodeFigure(Node data)
 	{
 		this.node = data;
+		setCornerDimensions(new Dimension(15, 15));
+		setOutline(true);
+		ToolbarLayout layout = new ToolbarLayout();
+		layout.setSpacing(5);
+		setLayoutManager(layout);
+		setBackgroundColor(new Color(null, 207, 226, 243));
+		setForegroundColor(new Color(null, 7, 55, 99));
+		setOpaque(true);
+		setLineWidthFloat(3.0f);
+		
+		// spacing so that label doesn't touch the border
+		Figure spacer = new Figure();
+		spacer.setMaximumSize(new Dimension(5, 5));
+		spacer.setMinimumSize(new Dimension(5, 5));
+		add(spacer);
 		
 		nameLabel = new Label(node.getName());
 		nameLabel.setFont(new Font(Display.getCurrent(), new FontData("", 10, SWT.BOLD)));
-		setFill(true);
-		setOutline(true);
-		ToolbarLayout layout = new ToolbarLayout();
-//		layout.setVertical(true);
-		setLayoutManager(layout);
-		setBackgroundColor(ColorConstants.green);
-		setOpaque(true);
-		
 		nameLabel.setForegroundColor(ColorConstants.black);
 		add(nameLabel);
 		
@@ -177,7 +184,7 @@ public class NodeFigure extends RoundedRectangle {
 				if (node.isFieldConstrained(field.getName())) {
 					label += " [" + node.getConstraint(field.getName()) + "]";
 					primitiveLabel.setText(label);
-					primitiveLabel.setForegroundColor(new Color(null, 255, 255, 255));
+					primitiveLabel.setForegroundColor(new Color(null, 255, 0, 0));
 				}
 				
 				primitivesFigure.add(primitiveLabel);
@@ -188,19 +195,6 @@ public class NodeFigure extends RoundedRectangle {
 		
 	    add(attributesFigure);
 	    add(primitivesFigure);
-	}
-
-	public void setSelected(boolean isSelected)
-	{
-		LineBorder lineBorder = (LineBorder) getBorder();
-		if (isSelected)
-		{
-			lineBorder.setWidth(2);
-		}
-		else
-		{
-			lineBorder.setWidth(1);
-		}
 	}
 	
 	public Rectangle getConstraint() {
@@ -239,6 +233,7 @@ public class NodeFigure extends RoundedRectangle {
 
 	@Override
 	public void paintFigure(Graphics graphics) {
+		graphics.setLineWidth(3);
 		super.paintFigure(graphics);
 	}
 	
