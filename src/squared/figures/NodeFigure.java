@@ -1,7 +1,6 @@
 package squared.figures;
 
 import org.eclipse.draw2d.AbstractBorder;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
@@ -16,11 +15,11 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
+import squared.IColors;
 import squared.editor.QueryEditor;
 import squared.model.Node;
 import squared.utils.Utils;
@@ -39,7 +38,7 @@ class MouseAwareLabel extends Label implements MouseMotionListener, MouseListene
 	public MouseAwareLabel(String str) {
 		super(str);
 		setFont(normalFont);
-		setForegroundColor(new Color(null, 0, 0, 0));
+		setForegroundColor(IColors.NODE_ATTRIBUTE);
 		
 		addMouseMotionListener(this);
 		addMouseListener(this);
@@ -157,8 +156,8 @@ public class NodeFigure extends RoundedRectangle {
 		ToolbarLayout layout = new ToolbarLayout();
 		layout.setSpacing(5);
 		setLayoutManager(layout);
-		setBackgroundColor(new Color(null, 207, 226, 243));
-		setForegroundColor(new Color(null, 7, 55, 99));
+		setBackgroundColor(IColors.NODE_BACKGROUND);
+		setForegroundColor(IColors.NODE_FOREGROUND);
 		setOpaque(true);
 		setLineWidthFloat(3.0f);
 		
@@ -170,7 +169,7 @@ public class NodeFigure extends RoundedRectangle {
 		
 		nameLabel = new Label(node.getName());
 		nameLabel.setFont(new Font(Display.getCurrent(), new FontData("", 10, SWT.BOLD)));
-		nameLabel.setForegroundColor(ColorConstants.black);
+		nameLabel.setForegroundColor(IColors.NODE_NAME_LABEL);
 		add(nameLabel);
 		
 //		Label attribute1 = new Label("field 1", new Image(d, 
@@ -184,7 +183,7 @@ public class NodeFigure extends RoundedRectangle {
 				if (node.isFieldConstrained(field.getName())) {
 					label += " [" + node.getConstraint(field.getName()) + "]";
 					primitiveLabel.setText(label);
-					primitiveLabel.setForegroundColor(new Color(null, 255, 0, 0));
+					primitiveLabel.setForegroundColor(IColors.NODE_CONSTRAINT);
 				}
 				
 				primitivesFigure.add(primitiveLabel);
