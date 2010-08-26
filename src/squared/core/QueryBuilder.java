@@ -13,6 +13,9 @@ import squared.model.Node;
 import squared.utils.Utils;
 
 public class QueryBuilder {
+	
+	protected static String[] validNumberOperators = {">", ">=", "<", "<=", "=="};
+	protected static String[] validStringOperators = {"*", "=="};
 
 	public static String getTextQuery(Diagram diagram) {
 		Vector<String> result = new Vector<String>();
@@ -28,7 +31,57 @@ public class QueryBuilder {
 		return convertToString(result);
 	}
 	
-	private static Vector<String> generateQuery(Diagram diagram) {
+	protected static String parseConstraint(String inputData) {
+		StringBuffer expression = new StringBuffer("");
+		boolean numberMode = false;
+		boolean stringMode = false;
+		String operator = "";
+		int operatorIndex = -1;
+		for (int i = 0; i < validNumberOperators.length; i++) {
+			operatorIndex = inputData.indexOf(validNumberOperators[i]); 
+			if (operatorIndex != -1) {
+				numberMode = true;
+				operator = validNumberOperators[i];
+				break;
+			}
+		}
+		
+		if (!numberMode) {
+			for (int i = 0; i < validStringOperators.length; i++) {
+				operatorIndex = inputData.indexOf(validStringOperators[i]); 
+				if (operatorIndex != -1) {
+					stringMode = true;
+					operator = validStringOperators[i];
+					break;
+				}
+			}
+		}
+		
+		if (stringMode) {
+			String leftSide = inputData.substring(0, operatorIndex);
+			String rightSide = inputData.substring(operatorIndex + 1, inputData.length());
+			expression.append("(").append(parseStringConstraint(leftSide.trim(), operator, rightSide.trim()));
+		} else if (numberMode) {
+			
+		} else {
+			expression.append("(").append(inputData).append(")");
+		}
+		
+		return expression.toString();
+	}
+	
+	protected static StringBuffer parseStringConstraint(String leftSide, String operator, String rightSide) {
+		StringBuffer expression = new StringBuffer("");
+		if (operator.equals("*")) {
+			if (!leftSide.equals("")) {
+				expression.append("\"").append(leftSide).append("\").startsWith(false)");
+			}
+		}
+		return expression;
+	}
+	
+	
+	protected static Vector<String> generateQuery(Diagram diagram) {
 		Vector<String> query = new Vector<String>();
 		
 		StringBuffer rootConstrain = new StringBuffer("query.constrain(");
@@ -54,8 +107,7 @@ public class QueryBuilder {
 						
 						Stack<String> descendStack = new Stack<String>();
 						Map.Entry entry = (Map.Entry) constr.next();
-						descendStack.push(".descend(\"" + entry.getKey() + "\").constrain("
-								+ entry.getValue() + ");");
+						descendStack.push(".descend(\"" + entry.getKey() + "\").constrain" + parseConstraint((String)entry.getValue()) + ";");
 						
 						StringBuffer line = new StringBuffer();
 						line.append("Constraint constr").append(Utils.capitalize((String)entry.getKey()));
@@ -105,7 +157,7 @@ public class QueryBuilder {
 		return query;
 	}
 	
-	private static String convertToString(Vector<String> result) {
+	protected static String convertToString(Vector<String> result) {
 		String singleString = "";
 		for (String line : result) {
 			singleString += line + "\n";
