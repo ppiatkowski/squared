@@ -14,8 +14,7 @@ import squared.utils.Utils;
 
 public class QueryBuilder {
 	
-	protected static String[] validNumberOperators = {">", ">=", "<", "<=", "=="};
-	protected static String[] validStringOperators = {"*", "=="};
+	protected static String[] validOperators = {">=", "<=", "==", ">", "<", "*"};
 
 	public static String getTextQuery(Diagram diagram) {
 		Vector<String> result = new Vector<String>();
@@ -33,41 +32,36 @@ public class QueryBuilder {
 	
 	protected static String parseConstraint(String inputData) {
 		StringBuffer expression = new StringBuffer("");
-		boolean numberMode = false;
-		boolean stringMode = false;
 		String operator = "";
 		int operatorIndex = -1;
-		for (int i = 0; i < validNumberOperators.length; i++) {
-			operatorIndex = inputData.indexOf(validNumberOperators[i]); 
+		for (int i = 0; i < validOperators.length; i++) {
+			operatorIndex = inputData.indexOf(validOperators[i]); 
 			if (operatorIndex != -1) {
-				numberMode = true;
-				operator = validNumberOperators[i];
+				operator = validOperators[i];
 				break;
 			}
 		}
 		
-		if (!numberMode) {
-			for (int i = 0; i < validStringOperators.length; i++) {
-				operatorIndex = inputData.indexOf(validStringOperators[i]); 
-				if (operatorIndex != -1) {
-					stringMode = true;
-					operator = validStringOperators[i];
-					break;
-				}
-			}
-		}
-		
-		if (stringMode) {
-			String leftSide = inputData.substring(0, operatorIndex);
-			String rightSide = inputData.substring(operatorIndex + 1, inputData.length());
-			expression.append("(").append(parseStringConstraint(leftSide.trim(), operator, rightSide.trim()));
-		} else if (numberMode) {
-			
-		} else {
+		if (operatorIndex == -1) {
 			expression.append("(").append(inputData).append(")");
+		} else {
+			String leftSide = inputData.substring(0, operatorIndex);
+			String rightSide = inputData.substring(operatorIndex + operator.length(), inputData.length());
+			expression.append("(").append(parseStringConstraint(leftSide.trim(), operator, rightSide.trim()));
 		}
 		
 		return expression.toString();
+	}
+	
+	protected static boolean isNumber(String str) {
+		boolean result = true;
+		try {
+			Double.parseDouble(str);
+			result = true;
+		} catch (NumberFormatException e) {
+			result = false;
+		}
+		return result;
 	}
 	
 	protected static StringBuffer parseStringConstraint(String leftSide, String operator, String rightSide) {
@@ -75,6 +69,17 @@ public class QueryBuilder {
 		if (operator.equals("*")) {
 			if (!leftSide.equals("")) {
 				expression.append("\"").append(leftSide).append("\").startsWith(false)");
+			}
+		} else if (isNumber(rightSide)) {
+			expression.append(rightSide);
+			if (operator.equals(">")) {
+				expression.append(").greater()");
+			} else if (operator.equals("<")) {
+				expression.append(").smaller()");
+			} else if (operator.equals(">=")) {
+				expression.append(").greater().equal()");
+			} else if (operator.equals("<=")) {
+				expression.append(").smaller().equal()");
 			}
 		}
 		return expression;
