@@ -80,6 +80,8 @@ public class QueryBuilder {
 				expression.append(").greater().equal()");
 			} else if (operator.equals("<=")) {
 				expression.append(").smaller().equal()");
+			} else if (operator.equals("==")) {
+				expression.append(")");
 			}
 		}
 		return expression;
