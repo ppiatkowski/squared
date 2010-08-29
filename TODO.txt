@@ -1,3 +1,11 @@
 - w NodeFigure dodaj ikony przy attrybutach i prymitywach
 
 - dispose of loaded images from outside shared library
+
+- copy query to clipboard
+
+- copy functionality on query viewer
+
+- clear diagram button on editor
+
+- undo/redo
