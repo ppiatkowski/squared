@@ -20,7 +20,7 @@
       <view
             category="squared"
             class="squared.views.QueryView"
-            icon="icons/soda_icon64.png"
+            icon="icons/soda_icon32.png"
             id="squared.views.QueryView"
             name="SODA Query View">
       </view>
@@ -44,7 +44,7 @@
             canFinishEarly="true"
             category="squared"
             class="squared.wizards.SodaQueryWizard"
-            icon="icons/soda_icon.png"
+            icon="icons/soda_icon32.png"
             id="squared.wizards.SodaQueryWizard"
             name="SODA Query File">
       </wizard>
@@ -55,7 +55,7 @@
                class="squared.editor.QueryEditor"
                default="false"
                extensions="sqd"
-               icon="icons/soda_icon16.png"
+               icon="icons/soda_icon32.png"
                id="squared.editor"
                name="SODA Query Editor">
       </editor>
