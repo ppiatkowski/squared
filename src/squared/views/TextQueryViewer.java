@@ -31,7 +31,6 @@ public class TextQueryViewer extends ContentViewer {
 
 	@Override
 	public void refresh() {
-		System.out.println("TODO get text query from Query engine");
 
 	}
 
