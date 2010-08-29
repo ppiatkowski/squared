@@ -346,7 +346,7 @@ public class QueryEditor extends GraphicalEditor
 			
 			InputDialog dialog = new InputDialog(graphicalViewer.getControl().getShell(), 
 					ITexts.QUERY_EDITOR_CONSTRAIN_FIELD + "'" + childName + "'", 
-					ITexts.QUERY_EDITOR_ENTER_CONSTRAINT, childName, null);//IInputValidator validator);
+					ITexts.QUERY_EDITOR_ENTER_CONSTRAINT, "", null);//IInputValidator validator);
 			if (dialog.open() == 0) {
 				node.constrainField(childName, dialog.getValue(), true);
 			}
