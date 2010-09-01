@@ -9,3 +9,39 @@
 - clear diagram button on editor
 
 - undo/redo
+
+- settings - zmiana domyslnej nazwy ObjectContainera db, baza, ...
+
+=============
+PAPER
+
+przepisac prace z uwględnieniem faktu ze celem pracy jest stworzenie interfejsu dostepu do db4o a SODA to tylko wybór (nie cel)
+
+we wprowadzeniu omawiamy wszystkie sposoby dostepu do danych i na koncu konkludujemy ze wybieramy SODE
+
+
+OMOWIENIE PROBLEMU
+  obiektowe bazy danych
+  db4o
+    Native Queries
+    QBE
+    LINQ
+    SODA
+  cel pracy
+  przyjete rozwiazania
+  organizacja pracy
+IMPLEMENTACJA
+  budowa grafu
+  projekt i architektura oprogramowania
+    wymagania
+    projekt
+  mozliwosci i funkcjonalnosci
+    przyklady / przypadki uzycia
+  uzyte narzedzia i technologie
+    db4o
+    SODA
+    eclipse platform
+    gef
+REZULTATY
+
+
