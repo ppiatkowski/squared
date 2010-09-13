@@ -1,3 +1,5 @@
+- obsługa wielu plików sqd - edytor w tabach
+
 - w NodeFigure dodaj ikony przy attrybutach i prymitywach
 
 - dispose of loaded images from outside shared library
