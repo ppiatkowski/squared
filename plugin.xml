@@ -22,7 +22,7 @@
             class="squared.views.QueryView"
             icon="icons/soda_icon32.png"
             id="squared.views.QueryView"
-            name="SODA Query View">
+            name="Query View">
       </view>
    </extension>
    <extension
@@ -46,7 +46,7 @@
             class="squared.wizards.SodaQueryWizard"
             icon="icons/soda_icon32.png"
             id="squared.wizards.SodaQueryWizard"
-            name="SODA Query File">
+            name="Query Diagram">
       </wizard>
    </extension>
    <extension
@@ -57,7 +57,7 @@
                extensions="sqd"
                icon="icons/soda_icon32.png"
                id="squared.editor"
-               name="SODA Query Editor">
+               name="Query Editor">
       </editor>
          <!--
       <editor
