@@ -22,7 +22,7 @@
             class="squared.views.QueryView"
             icon="icons/soda_icon32.png"
             id="squared.views.QueryView"
-            name="Query View">
+            name="Query Code View">
       </view>
    </extension>
    <extension
