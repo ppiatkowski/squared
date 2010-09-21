@@ -87,4 +87,14 @@ public class Utils {
 		return s;
 	}
 
+	protected static boolean isNumber(String str) {
+		boolean result = true;
+		try {
+			Double.parseDouble(str);
+			result = true;
+		} catch (NumberFormatException e) {
+			result = false;
+		}
+		return result;
+	}
 }

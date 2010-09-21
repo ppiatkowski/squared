@@ -63,16 +63,6 @@ public class QueryBuilder {
 		return expression.toString();
 	}
 	
-	protected static boolean isNumber(String str) {
-		boolean result = true;
-		try {
-			Double.parseDouble(str);
-			result = true;
-		} catch (NumberFormatException e) {
-			result = false;
-		}
-		return result;
-	}
 	
 	protected static StringBuffer parseStringConstraint(String leftSide, String operator, String rightSide)
 		throws ConstraintParserException
@@ -89,7 +79,7 @@ public class QueryBuilder {
 			} else if (rightSide.equals("")) {
 				expression.append("\"").append(leftSide).append("\").startsWith(false)");
 			}
-		} else if (isNumber(rightSide)) {
+		} else {
 			expression.append(rightSide);
 			if (operator.equals(">")) {
 				expression.append(").greater()");
@@ -102,10 +92,7 @@ public class QueryBuilder {
 			} else if (operator.equals("==")) {
 				expression.append(")");
 			}
-		} else {
-			System.err.println("QueryBuilder error - unrecognized pattern");
-			throw new ConstraintParserException("ConstraintParsing exception - unrecognized pattern");
-		}
+		} 
 		return expression;
 	}
 	
