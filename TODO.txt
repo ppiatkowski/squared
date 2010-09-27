@@ -18,33 +18,12 @@
 
 - Zoom in/out
 
+- kolorowanie składni
+
 =============
 PAPER
 
 kolorowanie składni
 
-OMOWIENIE PROBLEMU
-  obiektowe bazy danych
-  db4o
-    Native Queries
-    QBE
-    LINQ
-    SODA
-  cel pracy
-  przyjete rozwiazania
-  organizacja pracy
-IMPLEMENTACJA
-  graf zapytania
-  projekt i architektura oprogramowania
-    wymagania
-    projekt
-  mozliwosci i funkcjonalnosci
-    przyklady / przypadki uzycia
-  uzyte narzedzia i technologie
-    db4o
-    SODA
-    eclipse platform
-    gef
-REZULTATY
 
 
