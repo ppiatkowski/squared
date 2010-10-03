@@ -170,7 +170,7 @@ public class QueryView extends ViewPart implements IModelChangeListener {
 	private void showMessage(String message) {
 		MessageDialog.openInformation(
 			viewer.getControl().getShell(),
-			"SODA Query View",
+			"Query View",
 			message);
 	}
 
