@@ -59,16 +59,6 @@
                id="squared.editor"
                name="Query Editor">
       </editor>
-         <!--
-      <editor
-            class="org.eclipse.gef.ui.parts.GraphicalEditor"
-            contributorClass="org.eclipse.gef.ui.actions.ActionBarContributor"
-            default="false"
-            extensions="sqd"
-            id="squared.editor"
-            name="Soda Query Editor">
-      </editor>
-      -->
    </extension>
 
 </plugin>
