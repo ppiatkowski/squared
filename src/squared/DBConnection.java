@@ -95,7 +95,10 @@ public class DBConnection {
 	
 	public void close() {
 		System.out.println("[squared] CLOSE object container: "+containerPath);
-		db.close();
+		if (db != null)
+		{
+			db.close();
+		}
 		
 		db = null;
 		dbReflection = null;
