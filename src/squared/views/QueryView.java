@@ -128,21 +128,21 @@ public class QueryView extends ViewPart implements IModelChangeListener {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
+		//manager.add(action1);
 		manager.add(new Separator());
-		manager.add(action2);
+		//manager.add(action2);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(action2);
+		//manager.add(action1);
+		//manager.add(action2);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
-		manager.add(action2);
+		//manager.add(action1);
+		//manager.add(action2);
 	}
 
 	private void makeActions() {
