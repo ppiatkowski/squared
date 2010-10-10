@@ -57,27 +57,29 @@ public class QueryBuilder {
 		} else {
 			String leftSide = inputData.substring(0, operatorIndex);
 			String rightSide = inputData.substring(operatorIndex + operator.length(), inputData.length());
-			expression.append("(").append(parseStringConstraint(leftSide.trim(), operator, rightSide.trim()));
+			expression.append("(").append(parseStringConstraint(leftSide.trim(), operator, rightSide.trim(), true));
 		}
 		
 		return expression.toString();
 	}
 	
 	
-	protected static StringBuffer parseStringConstraint(String leftSide, String operator, String rightSide)
+	protected static StringBuffer parseStringConstraint(String leftSide, String operator, String rightSide, boolean caseSensitive)
 		throws ConstraintParserException
 	{
+		StringBuffer caseStatus = new StringBuffer(caseSensitive ? "true" : "false");
+		StringBuffer matchOperator = new StringBuffer(caseSensitive ? "contains()" : "like()");
 		StringBuffer expression = new StringBuffer("");
 		if (operator.equals("*")) {
 			if (leftSide.equals("")) {
 				int asteriskIndex = rightSide.indexOf("*");
 				if (asteriskIndex == -1) {
-					expression.append("\"").append(rightSide).append("\").endsWith(false)");
+					expression.append("\"").append(rightSide).append("\").endsWith(").append(caseStatus).append(")");
 				} else {
-					expression.append("\"").append(rightSide.substring(0, asteriskIndex)).append("\").like()");
+					expression.append("\"").append(rightSide.substring(0, asteriskIndex)).append("\").").append(matchOperator);
 				}
 			} else if (rightSide.equals("")) {
-				expression.append("\"").append(leftSide).append("\").startsWith(false)");
+				expression.append("\"").append(leftSide).append("\").startsWith(").append(caseStatus).append(")");
 			}
 		} else {
 			expression.append(rightSide);
