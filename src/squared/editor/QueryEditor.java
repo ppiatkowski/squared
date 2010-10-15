@@ -147,7 +147,10 @@ public class QueryEditor extends GraphicalEditor
 
 		ImageLoader imgLoader = new ImageLoader();
 		imgLoader.data = new ImageData[] { img.getImageData() };
-		imgLoader.save(saveLocation, SWT.IMAGE_PNG);
+		if (saveLocation != null && !saveLocation.equals(""))
+		{
+			imgLoader.save(saveLocation, SWT.IMAGE_PNG);
+		}
 	}
 	
 	public boolean isDirty()
