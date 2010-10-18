@@ -1,0 +1,10 @@
+SETUP
+===================
+To build the sources of the plugin choose File -> Import -> Plug-in Development -> Plug-ins and Fragments
+
+In some cases you will need to manually add a directive in META-INF/MANIGEST.MF file.
+Change the line 'Bundle-SymbolicName: squared.source' to 'Bundle-SymbolicName: squared.source;singleton:=true'
+
+If Eclipse reports unresolved imports and many types are not recognized you might need to setup plugin dependencies.
+Double clock plugin.xml, go to 'Dependencies' tab and click Add in 'Required Plug-ins' section and add plugins:
+org.eclipse.ui, org.eclipse.core.runtime, org.eclipse.core.resources, org.eclipse.ui.ide, org.eclipse.gef
